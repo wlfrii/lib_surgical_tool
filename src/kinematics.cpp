@@ -104,7 +104,7 @@ RT Kinematics::addCamera()
 	return self;
 }
 
-RT DuBuilder::addGripper(std::string &body0, std::string &body1)
+RT Kinematics::addGripper(std::string &body0, std::string &body1)
 {
 	// the gamma3 and the length of tool arm should be considered
 	self.p = self.p + self.R*Eigen::Vector3f(0, 0, DEFAULT_GRIPPER_LEN);

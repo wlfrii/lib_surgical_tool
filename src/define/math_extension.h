@@ -3,7 +3,7 @@
 #include <cmath>
 #include <math.h>
 #include <vector>
-#include "../inc/Eigen/Dense"
+#include <Eigen/Dense>
 #include "rt.h"
 
 const double PI = 3.14159265358979323846;

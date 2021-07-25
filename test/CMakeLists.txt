@@ -1,11 +1,15 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 project(lib_instrument_test)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(src)
+find_package(GTest REQUIRED)
+find_package(lib_instrument REQUIRED)
 
-add_subdirectory(inc/gtest)
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${lib_instrument_INCLUDE_DIR}
+)
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/inc INC_SRC)
@@ -20,6 +24,9 @@ add_test(
     COMMAND ${PROJECT_NAME}
 )
 
+link_directories(${CMAKE_BINARY_DIR}/src)
+
 target_link_libraries(${PROJECT_NAME} PUBLIC
-    gtest
+    ${GTEST_LIBRARIES}
+    ${lib_instrument_LIBRARIES}
 )

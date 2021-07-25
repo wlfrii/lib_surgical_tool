@@ -1,17 +1,17 @@
 #ifndef INSTRUMENT_H
 #define INSTRUMENT_H
-#include "../du_builder.h"
-#include "../configspcs/configspcs_builder.h"
-#include "../define/instrument_param.h"
-#include "../define/instrument_config.h"
-#include "../define/instrument_type.h"
+#include "kinematics.h"
+#include "configspcs/configspcs_builder.h"
+#include "./define/instrument_param.h"
+#include "./define/instrument_config.h"
+#include "./define/instrument_type.h"
 #include <memory>
 
 class ConfigSpcsBuilder;
 
 class Instrument
 {
-	friend DuBuilder;
+	friend Kinematics;
 public:
 	Instrument();
 	~Instrument();
@@ -22,7 +22,7 @@ public:
 	void updateConfig(const InstrumentConfig &);
 	void updateLimitStatus(uint8_t, uint8_t, uint8_t, float, float, float, float);
 
-	void setInstrumentType(uint8_t type);				//!< 设置 Instrument 类型，如传统臂，短弯臂等等
+	void setInstrumentType(uint8_t type);				
 	void setGripperType(uint8_t type);
 	void setGripperAngle(float type);
 	void setArmCtrlState(uint8_t control_type);
@@ -45,7 +45,7 @@ public:
 	* Kinematics calculation for Simulation data creating.
 	* The argument -q- did not set to const because of the theta would be revised once it is a negative value
 	*/
-	std::vector<Du*>& getDus();
+	//std::vector<Du*>& getDus();
 	void updateDus(bool is_init = true);
 	const ConfigSpcs& getConfigSpcs() const;
 
@@ -64,10 +64,9 @@ private:
 	std::unique_ptr<ConfigSpcsBuilder>	config_builder;
 
 	// Revise 2020.11.27, Wanglf
-	DuBuilder*			du_builder;
-	std::vector<Du*>	dus;		// store the 3D-clouds for opengl
+	Kinematics*			kinematics;
+	//std::vector<Du*>	dus;		// store the 3D-clouds for opengl
 	float				alpha;
-	glm::vec3			default_color;
 
 	// Revise 2020.11.27, Wanglf, for the status of moving and the corresponding
 	// target point.

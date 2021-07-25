@@ -1,6 +1,6 @@
 #ifndef RT_H
 #define RT_H
-#include <../inc/Eigen/Dense>
+#include <Eigen/Dense>
 
 struct RT
 {

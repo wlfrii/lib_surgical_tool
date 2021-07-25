@@ -26,9 +26,9 @@ void TraditionalBuilder::distributeConfigs(ConfigSpcs &q)
 
 ConfigSpcs& TraditionalBuilder::buildC4(ConfigSpcs &q, float Lb)
 {
-	q.push(ConfigSpc(0, instrument.getConfig().getPhi(), Lb, false, instrument.getLColor()));
-	q.push(ConfigSpc(instrument.getConfig().getTheta1(), instrument.getConfig().getDelta1(), instrument.getParam().getL1(), true, instrument.getTheta1Color()));
-	q.push(ConfigSpc(0, 0, instrument.getParam().getLr(), false, instrument.getBodyColor()));
-	q.push(ConfigSpc(instrument.getConfig().getTheta2(), instrument.getConfig().getDelta2(), instrument.getParam().getL2(), true, instrument.getTheta2Color()));
+	q.push(ConfigSpc(0, instrument.getConfig().getPhi(), Lb, false));
+	q.push(ConfigSpc(instrument.getConfig().getTheta1(), instrument.getConfig().getDelta1(), instrument.getParam().getL1(), true));
+	q.push(ConfigSpc(0, 0, instrument.getParam().getLr(), false));
+	q.push(ConfigSpc(instrument.getConfig().getTheta2(), instrument.getConfig().getDelta2(), instrument.getParam().getL2(), true));
 	return q;
 }

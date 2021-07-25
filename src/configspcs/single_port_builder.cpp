@@ -24,8 +24,8 @@ void SinglePortBuilder::distributeConfigs(ConfigSpcs &q)
 ConfigSpcs& SinglePortBuilder::buildC3(ConfigSpcs &q, float L1)
 {
 	q.push(ConfigSpc(0, instrument.getConfig().getPhi(), MIN_LENGTH));
-	q.push(ConfigSpc(instrument.getConfig().getTheta1(), instrument.getConfig().getDelta1(), L1, true, instrument.getLTheta1Color()));
-	q.push(ConfigSpc(0, 0, instrument.getParam().getLr(), false, instrument.getBodyColor()));
-	q.push(ConfigSpc(instrument.getConfig().getTheta2(), instrument.getConfig().getDelta2(), instrument.getParam().getL2(), true, instrument.getTheta2Color()));
+	q.push(ConfigSpc(instrument.getConfig().getTheta1(), instrument.getConfig().getDelta1(), L1, true));
+	q.push(ConfigSpc(0, 0, instrument.getParam().getLr(), false));
+	q.push(ConfigSpc(instrument.getConfig().getTheta2(), instrument.getConfig().getDelta2(), instrument.getParam().getL2(), true));
 	return q;
 }
