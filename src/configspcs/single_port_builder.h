@@ -1,19 +1,19 @@
-#ifndef SINGLE_PORT_BUILDER_H
-#define SINGLE_PORT_BUILDER_H
-#include "configspcs_builder.h"
+#ifndef LIB_INSTRUMENT_SINGLE_PORT_BUILDER_H_LF
+#define LIB_INSTRUMENT_SINGLE_PORT_BUILDER_H_LF
+#include "../../export/configspcs/configspcs_builder.h"
 
 class SinglePortBuilder : public ConfigSpcsBuilder
 {
 public:
-	SinglePortBuilder(const Instrument& ins)
-		: ConfigSpcsBuilder(ins)
+	SinglePortBuilder(const Instrument* instrument)
+		: ConfigSpcsBuilder(instrument)
 	{}
 	virtual ~SinglePortBuilder() {}
 
-	virtual void distributeConfigs(ConfigSpcs &q) override;
+	virtual void buildConfigSpcs(ConfigSpcs &q) override;
 
 protected:
 	ConfigSpcs& buildC3(ConfigSpcs &q, float L1);
 };
 
-#endif // SINGLE_PORT_BUILDER_H
+#endif // LIB_INSTRUMENT_SINGLE_PORT_BUILDER_H_LF

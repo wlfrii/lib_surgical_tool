@@ -6,7 +6,8 @@ include(CMakeFindDependencyMacro)
 
 
 # Same syntax ad find_package
-find_dependency(Eigen3 REQUIRED)
+#find_dependency(Eigen3 REQUIRED)
+find_dependency(lib_math REQUIRED)
 
 # Any extra setup
 

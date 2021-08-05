@@ -1,20 +1,11 @@
-#ifndef INSTRUMENT_CONFIG_H
-#define INSTRUMENT_CONFIG_H
+#ifndef LIB_INSTRUMENT_CONFIG_H_LF
+#define LIB_INSTRUMENT_CONFIG_H_LF
 
 class InstrumentConfig
 {
 public:
-	InstrumentConfig() 
-		: L(30)
-		, phi(0)
-		, theta1(0)
-		, delta1(0)
-		, theta2(0)
-		, delta2(0) 
-	{}
-
-	InstrumentConfig(float L, float phi, float theta1, float delta1, float theta2, float delta2)
-		: L(L)
+	InstrumentConfig(float L_insert = 0, float phi = 0, float theta1 = 0, float delta1 = 0, float theta2 = 0, float delta2 = 0)
+		: L_insert(L_insert)
 		, phi(phi)
 		, theta1(theta1)
 		, delta1(delta1)
@@ -24,23 +15,12 @@ public:
 
 	InstrumentConfig(const InstrumentConfig& other)
 	{
-		L = other.L;
+		L_insert = other.L_insert;
 		phi = other.phi;
 		theta1 = other.theta1;
 		delta1 = other.delta1;
 		theta2 = other.theta2;
 		delta2 = other.delta2;
-	}
-
-	InstrumentConfig& operator= (const InstrumentConfig &other)
-	{
-		L = other.L;
-		phi = other.phi;
-		theta1 = other.theta1;
-		delta1 = other.delta1;
-		theta2 = other.theta2;
-		delta2 = other.delta2;
-		return *this;
 	}
 
 	void set(float value, unsigned char idx)
@@ -48,7 +28,7 @@ public:
 		switch (idx)
 		{
 		case 0:
-			L = value;
+			L_insert = value;
 			break;
 		case 1:
 			phi = value;
@@ -70,7 +50,7 @@ public:
 		}
 	}
 
-	float getL()        const	{	return L;	    }
+	float getLinsert()  const	{	return L_insert;}
 
 	float getPhi()      const	{	return phi;	    }
 
@@ -83,7 +63,7 @@ public:
 	float getDelta2()   const	{	return delta2;	}
 
 private:
-	float L;
+	float L_insert;
 	float phi;
 	float theta1;
 	float delta1;
@@ -91,4 +71,4 @@ private:
 	float delta2;
 };
 
-#endif // INSTRUMENT_CONFIG_H
+#endif // LIB_INSTRUMENT_CONFIG_H_LF

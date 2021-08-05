@@ -1,5 +1,5 @@
-#ifndef INSTRUMENT_PARAM_H
-#define INSTRUMENT_PARAM_H
+#ifndef LIB_INSTRUMENT_PARAM_H_LF
+#define LIB_INSTRUMENT_PARAM_H_LF
 
 class InstrumentParam
 {
@@ -8,17 +8,15 @@ public:
 		: L1(40)
 		, Lr(20)
 		, L2(60)
-		, LS2(0)
-		, LSr(0)
+		, Lg(0)
 		, radius(4)
 		, gamma3(0)
 	{}
-	InstrumentParam(float L1, float Lr, float L2, float LS2, float LSr, float r, float gamma3 = 0)
+	InstrumentParam(float L1, float Lr, float L2, float Lg, float r, float gamma3 = 0)
 		: L1(L1)
 		, Lr(Lr)
 		, L2(L2)
-		, LS2(LS2)
-		, LSr(LSr)
+		, Lg(Lg)
 		, radius(r)
 		, gamma3(gamma3)
 	{}
@@ -27,9 +25,8 @@ public:
 		L1 = param.L1;
 		Lr = param.Lr;
 		L2 = param.L2;
+		Lg = param.Lg;
 		radius = param.radius;
-		LS2 = param.LS2;
-		LSr = param.LSr;
 		gamma3 = param.gamma3;
 
 		return *this;
@@ -40,10 +37,8 @@ public:
     float getLr()       const	{   return Lr;	    }
 	
     float getL2()       const	{   return L2;	    }
-	
-    float getLS2()      const	{   return LS2;	    }
-	
-    float getLSr()      const	{   return LSr;	    }
+
+	float getLg()       const	{   return Lg;	    }
 	
     float getRadius()   const	{   return radius;    }
 	
@@ -52,12 +47,10 @@ public:
 private:
 	float L1;		// would also used to represent LS1
 	float Lr;
-	float L2;	
-	float LS2;		// LS2 of short bend instrument
-	float LSr;		// LSr of short bend instrument
+	float L2;
+	float Lg;
 	float radius;
-
 	float gamma3;
 };
 
-#endif // INSTRUMENT_PARAM_H
+#endif // LIB_INSTRUMENT_PARAM_H_LF
