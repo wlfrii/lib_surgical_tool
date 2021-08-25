@@ -1,5 +1,6 @@
 #ifndef LIB_INSTRUMENT_CONFIG_H_LF
 #define LIB_INSTRUMENT_CONFIG_H_LF
+#include <cstdio>
 
 class InstrumentConfig
 {
@@ -61,6 +62,13 @@ public:
 	float getTheta2()   const	{	return theta2;	}
 
 	float getDelta2()   const	{	return delta2;	}
+
+    char* c_str() const {
+        static char info[128];
+        sprintf(info, "L_insert:%f,phi:%f,theta1:%f,delta1:%f,theta2:%f,delta2:%f",
+                L_insert, phi, theta1, delta1, theta2, delta2);
+        return info;
+    }
 
 private:
 	float L_insert;

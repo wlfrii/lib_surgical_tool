@@ -3,7 +3,6 @@ project(lib_instrument_test)
 
 set(CMAKE_CXX_STANDARD 14)
 
-find_package(GTest REQUIRED)
 
 set(CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../../buildtarget/cmake/)
 message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
@@ -17,13 +16,14 @@ add_executable(${PROJECT_NAME}
     ${INC_SRC}
 )
 
-
+set(CATCH_INCLUDE_DIR /usr/local/Cellar/catch2/2.13.7/include/)
 target_include_directories(${PROJECT_NAME}
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        $<BUILD_INTERFACE:${CATCH_INCLUDE_DIR}>
+    PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     ${lib_instrument_LIBRARIES}
-    ${GTEST_LIBRARIES}
 )

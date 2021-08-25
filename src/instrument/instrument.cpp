@@ -21,13 +21,13 @@ namespace
 }
 
 Instrument::Instrument()
-	: type(INSTRUMENT_TYPE_UNKNOWN)
-	, gripper_type(0)
-	, gripper_angle(0)
-	, base_pose(::real_pose.get())
-	, end_pose(base_pose)
+    : _type(INSTRUMENT_TYPE_UNKNOWN)
+    , _gripper_type(0)
+    , _gripper_angle(0)
+    , _base_pose(::real_pose.get())
+    , _end_pose(_base_pose)
 {
-	config_spcs_builder = ConfigSpcsFactory::createConfigSpcsBuilder(this);
+    _config_spcs_builder = ConfigSpcsFactory::createConfigSpcsBuilder(_type);
 }
 
 Instrument::~Instrument()
@@ -35,101 +35,157 @@ Instrument::~Instrument()
 
 }
 
-void Instrument::initialize(const InstrumentParam &new_param, const InstrumentConfig &new_config)
+void Instrument::initialize(const InstrumentParam &param, const InstrumentConfig &config)
 {
-	param = new_param;
-	config = new_config;
+    _param = param;
+    _config = config;
 }
 
-void Instrument::updateConfig(const InstrumentConfig &new_config)
+void Instrument::updateConfig(const InstrumentConfig &config)
 {
-	config = new_config;
+    _config = config;
 }
 
-void Instrument::setInstrumentType(uint8_t new_type)
+void Instrument::setInstrumentType(uint8_t type)
 {
-	if (type != InstrumentType(new_type))
+    if (_type != InstrumentType(type))
 	{
-		type = InstrumentType(new_type);
+        _type = InstrumentType(type);
 
-		if (config_spcs_builder) config_spcs_builder.reset();
-		config_spcs_builder = ConfigSpcsFactory::createConfigSpcsBuilder(this);
+        if (_config_spcs_builder)
+            _config_spcs_builder.reset();
+        _config_spcs_builder = ConfigSpcsFactory::createConfigSpcsBuilder(_type);
+
+        updateWorkingSpace();
 	}
 }
 
 void Instrument::setGripperType(uint8_t type)
 {
-	gripper_type = type;
+    _gripper_type = type;
 }
 
-void Instrument::setGripperAngle(float type)
+void Instrument::setGripperAngle(float angle)
 {
-	gripper_angle = type;
+    _gripper_angle = angle;
 }
 
 void Instrument::setBaseRot(float angle)
 {
-	base_pose.R = mmath::rotByZ<float>(-angle);
+    _base_pose.R = mmath::rotByZ<float>(-angle);
 }
 
 void Instrument::setBasePose(const mmath::RT &rt)
 {
-	base_pose = rt;
+    _base_pose = rt;
 }
 
 void Instrument::reset()
 {
-	this->setInstrumentType(INSTRUMENT_TYPE_UNKNOWN);
-	this->setGripperType(0);
-	this->initialize(InstrumentParam(0, 0, 0, 0, 0, 0), InstrumentConfig(-500, 0, 0, 0, 0, 0));
-	this->end_pose = this->base_pose;
-	this->config_spcs.clear();
-	this->task_spc.clear();
+    setInstrumentType(INSTRUMENT_TYPE_UNKNOWN);
+    setGripperType(0);
+    initialize(InstrumentParam(0, 0, 0, 0, 0, 0), InstrumentConfig(-500, 0, 0, 0, 0, 0));
+    _end_pose = _base_pose;
+    _config_spcs.clear();
+    _task_spc.clear();
 }
 
 
 uint8_t Instrument::getInstrumentType() const
 {
-	return type;
+    return _type;
 }
 
 const InstrumentConfig& Instrument::getConfig() const
 {
-	return config;
+    return _config;
 }
 
 const InstrumentParam& Instrument::getParam() const
 {
-	return param;
+    return _param;
 }
 
 const mmath::RT& Instrument::getBasePose() const
 {
-	return base_pose;
+    return _base_pose;
 }
 
 const mmath::RT& Instrument::getEndPose() const
 {
-	return end_pose;
+    return _end_pose;
 }
 
 const ConfigSpcs& Instrument::getConfigSpcs() const
 {
-	return config_spcs;
+    return _config_spcs;
 }
 
 const TaskSpc& Instrument::getTaskSpc() const
 {
-	return task_spc;
+    return _task_spc;
+}
+
+const std::vector<Eigen::Vector3f>& Instrument::getWSClouds() const
+{
+    return _ws_clouds;
 }
 
 void Instrument::updateKinematics()
 {
-	config_spcs_builder->buildConfigSpcs(config_spcs);
-	calcForwardKinematics(config_spcs, task_spc);
+    _config_spcs.clear();
+    _config_spcs_builder->buildConfigSpcs(_config, _param, _config_spcs);
+    _task_spc.clear();
+    calcForwardKinematics(_config_spcs, _task_spc);
 
-	end_pose = base_pose;
-	for(int i = 0; i < task_spc.count(); i++){
-		end_pose *= task_spc[i];
+    _end_pose = _base_pose;
+    _end_pose *= _task_spc.base2end;
+}
+
+void Instrument::updateWorkingSpace()
+{
+    auto addPoint = [this](InstrumentConfig& config) {
+        ConfigSpcs config_spcs;
+        TaskSpc    task_spc;
+        _config_spcs_builder->buildConfigSpcs(config, this->_param, config_spcs);
+        calcForwardKinematics(config_spcs, task_spc);
+        this->_ws_clouds.push_back(task_spc.base2end.t);
+    };
+
+    _ws_clouds.clear();
+    switch(_type){
+    case INSTRUMENT_TYPE_LAPAROSCOPE:
+    {
+        std::vector<double> L_range, phi_range, theta1_range, theta2_range;
+        mmath::linespace(0, 5.0, 150.0, L_range);
+        mmath::linespace(0, mmath::deg2rad(4), 2*mmath::PI, phi_range);
+        mmath::linespace(0, mmath::deg2rad(3), mmath::PI / 2, theta1_range);
+        mmath::linespace(0, mmath::deg2rad(6), mmath::PI*2 / 3, theta2_range);
+
+        float L_insert = _param.getL1() + _param.getL2() + _param.getLr();
+        for(auto& phi:phi_range){
+            for(auto& theta2:theta2_range){
+                InstrumentConfig config(L_insert, phi, mmath::PI / 2, 0, theta2, 0);
+                addPoint(config);
+            }
+            for(auto& theta1:theta1_range){
+                InstrumentConfig config(L_insert + 150.0, phi, theta1, 0, 0, 0);
+                addPoint(config);
+            }
+            for(auto& L:L_range){
+                InstrumentConfig config(L_insert + L, phi, mmath::PI / 2, 0, 0, 0);
+                addPoint(config);
+            }
+        }
+		break;
+    }
+	case InstrumentType::INSTRUMENT_TYPE_SP_TOOL:
+    {
+
+		break;
+    }
+	default:
+		break;
 	}
+
 }

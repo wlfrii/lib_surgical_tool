@@ -5,7 +5,9 @@
 #include "./instrument_config.h"
 #include "./instrument_type.h"
 #include <memory>
+#include <vector>
 #include <lib_math/lib_math.h>
+#include <Eigen/Dense>
 
 class ConfigSpcsBuilder;
 
@@ -39,25 +41,35 @@ public:
 	const	mmath::RT&			getEndPose() const;
 	const 	ConfigSpcs& 		getConfigSpcs() const;
 	const   TaskSpc& 			getTaskSpc() const;
+	
+	/**
+	 * @brief Get the working space clouds of current instrument.
+	 * 
+	 * @return const std::vector<Eigen::Vector3f>& 
+	 */
+	const std::vector<Eigen::Vector3f>& getWSClouds() const;
 
 private:
 	void updateKinematics();
+	void updateWorkingSpace();
 
-private:
-	InstrumentParam  param;
-	InstrumentConfig config;
-	InstrumentType	 type;
 
-	uint8_t	gripper_type;
-	float   gripper_angle;
+    InstrumentParam     _param;
+    InstrumentConfig    _config;
+    InstrumentType      _type;
 
-	mmath::RT      base_pose;
-	mmath::RT      end_pose;
+    uint8_t             _gripper_type;
+    float               _gripper_angle;
+
+    mmath::RT           _base_pose;
+    mmath::RT           _end_pose;
 	
-	std::unique_ptr<ConfigSpcsBuilder>	config_spcs_builder;
+    std::unique_ptr<ConfigSpcsBuilder>	_config_spcs_builder;
 
-	ConfigSpcs 	config_spcs;
-	TaskSpc 	task_spc;
+    ConfigSpcs          _config_spcs;
+    TaskSpc             _task_spc;
+
+    std::vector<Eigen::Vector3f> _ws_clouds;
 };
 
 

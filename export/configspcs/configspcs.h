@@ -38,8 +38,11 @@ public:
         for(int i = 0; i < _count; i++){
             _elements[i] = mmath::RT();
         }
+        base2end = mmath::RT();
         _count = 0;
     }
+
+    mmath::RT base2end;
 };
 
 
@@ -55,6 +58,7 @@ inline void calcForwardKinematics(const ConfigSpcs& qs, TaskSpc& task_space)
 	for(int i = 0; i < qs.count(); i++){
 		auto& q = qs[i];
 		mmath::continuum::calcSingleSegmentRT(q, task_space[i]);
+        task_space.base2end *= task_space[i];
 	}
 }
 /**

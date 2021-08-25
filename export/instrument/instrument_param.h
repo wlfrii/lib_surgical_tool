@@ -1,18 +1,11 @@
 #ifndef LIB_INSTRUMENT_PARAM_H_LF
 #define LIB_INSTRUMENT_PARAM_H_LF
+#include <cstdio>
 
 class InstrumentParam
 {
 public:
-	InstrumentParam()
-		: L1(40)
-		, Lr(20)
-		, L2(60)
-		, Lg(0)
-		, radius(4)
-		, gamma3(0)
-	{}
-	InstrumentParam(float L1, float Lr, float L2, float Lg, float r, float gamma3 = 0)
+    InstrumentParam(float L1 = 40, float Lr = 20, float L2 = 60, float Lg = 20, float r = 4, float gamma3 = 0)
 		: L1(L1)
 		, Lr(Lr)
 		, L2(L2)
@@ -43,6 +36,13 @@ public:
     float getRadius()   const	{   return radius;    }
 	
     float getGamma3()   const	{   return gamma3;    }
+
+    char* c_str() const {
+        static char info[128];
+        sprintf(info, "L1:%f,Lr:%f,L2:%f,Lg:%f,radius:%f,gamma3:%f",
+                L1, Lr, L2, Lg, radius, gamma3);
+        return info;
+    }
 
 private:
 	float L1;		// would also used to represent LS1

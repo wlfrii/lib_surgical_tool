@@ -5,15 +5,15 @@
 class SinglePortBuilder : public ConfigSpcsBuilder
 {
 public:
-	SinglePortBuilder(const Instrument* instrument)
-		: ConfigSpcsBuilder(instrument)
+    SinglePortBuilder()
+        : ConfigSpcsBuilder()
 	{}
 	virtual ~SinglePortBuilder() {}
 
-	virtual void buildConfigSpcs(ConfigSpcs &q) override;
+    virtual void buildConfigSpcs(const InstrumentConfig&, const InstrumentParam&, ConfigSpcs&) override;
 
 protected:
-	ConfigSpcs& buildC3(ConfigSpcs &q, float L1);
+    ConfigSpcs& buildC3(const InstrumentConfig& config, const InstrumentParam& param, float L1, ConfigSpcs &q);
 };
 
 #endif // LIB_INSTRUMENT_SINGLE_PORT_BUILDER_H_LF
