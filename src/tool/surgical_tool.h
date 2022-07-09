@@ -21,14 +21,57 @@ public:
     SurgicalTool();
     ~SurgicalTool();
 
-	/* Set() interfaces */
+    /**
+     * @brief Initialize the surgical tool object with tool structure parameters
+     * and types of of the tool and its gripper.
+     * 
+     * @param param  The structure parameters
+     * @param tool_type  The type of the surgical tool, see SurgicalToolType
+     * @param gripper_type   The type of the gripper (not completed!!!)
+     */
     void initialize(const SurgicalToolParam &param, uint8_t tool_type,
                     uint8_t gripper_type);
+
+    /**
+     * @brief Update the configures of the surgical tool. (forward kinematics)
+     * 
+     * @param config
+     */
     void updateConfig(const SurgicalToolConfig &config);
+
+    /**
+     * @brief Update the target of the surgical tool. (inverse kinematics).
+     * NOTE, the target should w.r.t the base frame of the surgical tool.
+     * 
+     * @param pose 
+     */
+    void updateTarget(const mmath::Pose &pose);
+
+    /**
+     * @brief Set the gripper angle, if it has a active gripper.
+     * 
+     * @param type 
+     */
 	void setGripperAngle(float type);
+
+    /**
+     * @brief Set the tao, which is a rotated angle w.r.t Endoscope's base.
+     * 
+     * @param tao 
+     */
     void setTao(float tao);
+
+    /**
+     * @brief Set the base pose, if it is not single port mode.
+     * 
+     * @param pose 
+     */
     void setBasePose(const mmath::Pose &pose);
 
+    /**
+     * @brief Reset this surigcal tool as unknow tool.
+     * 
+     */
 	void reset();
 
 	/* Get() interfaces */
@@ -48,7 +91,9 @@ public:
 	const std::vector<Eigen::Vector3f>& getWSClouds() const;
 
 private:
-	void updateKinematics();
+    void forwardKinematics();
+    void inverseKinematics();
+
 	void updateWorkingSpace();
 
     SurgicalToolType      _type;

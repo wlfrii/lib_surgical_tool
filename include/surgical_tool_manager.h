@@ -38,6 +38,7 @@
 #include "./define/surgical_tool_type.h"
 #include "./define/surgical_tool_param.h"
 #include "./define/surgical_tool_config.h"
+#include "./define/surgical_tool_kine.h"
 
 class SurgicalTool;
 

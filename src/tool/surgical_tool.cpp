@@ -1,6 +1,7 @@
 #include "surgical_tool.h"
 #include "../configspcs/configspcs_factory.h"
 #include "../define/marray.h"
+#include "../include/define/surgical_tool_kine.h"
 #include <utility>
 
 namespace
@@ -60,10 +61,16 @@ void SurgicalTool::updateConfig(const SurgicalToolConfig &config)
 {
     _config = config;
     if(_type == SURGICAL_TOOL_TYPE_ENDOSCOPIC){
-        _config.set(_config.L_insert - 225, 0);
+        _config.set(_config.L_insert - 225, CONFIG_L_INSERT);
     }
 
-    updateKinematics();
+    forwardKinematics();
+}
+
+
+void SurgicalTool::updateTarget(const mmath::Pose &pose)
+{
+
 }
 
 
@@ -144,7 +151,7 @@ const std::vector<Eigen::Vector3f>& SurgicalTool::getWSClouds() const
 }
 
 
-void SurgicalTool::updateKinematics()
+void SurgicalTool::forwardKinematics()
 {
     _config_spcs.clear();
     _config_spcs_builder->buildConfigSpcs(_config, _param, _config_spcs);    
@@ -154,6 +161,12 @@ void SurgicalTool::updateKinematics()
 
     _end_pose = _base_pose;
     _end_pose *= _task_spc.end2base;
+}
+
+
+void SurgicalTool::inverseKinematics()
+{
+
 }
 
 

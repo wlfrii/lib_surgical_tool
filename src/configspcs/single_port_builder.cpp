@@ -21,6 +21,8 @@ void SinglePortBuilder::buildConfigSpcs(const SurgicalToolConfig& config, const 
         q = buildC2(config, param, L_insert - L_C1_max, q);
 	else
         q = buildC3(config, param, L_insert - L_C2_max, q);
+    // Add gripper
+    q.add(ConfigSpc(0, 0, param.getLg(), false));
 }
 
 ConfigSpcs& SinglePortBuilder::buildC3(const SurgicalToolConfig &config, const SurgicalToolParam &param, float L1, ConfigSpcs &q)
