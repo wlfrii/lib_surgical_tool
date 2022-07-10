@@ -47,11 +47,11 @@ constexpr unsigned char MAX_TOOL_NUM = 4;
 
 // Tool index
 using ToolIdx = uint8_t;
-const ToolIdx TOOL1 = 0;
-const ToolIdx TOOL2 = 1;
-const ToolIdx TOOL3 = 2;
-const ToolIdx ENDO  = 2;
-const ToolIdx TOOL4 = 3;
+constexpr ToolIdx TOOL1 = 0;
+constexpr ToolIdx TOOL2 = 1;
+constexpr ToolIdx TOOL3 = 2;
+constexpr ToolIdx ENDO  = 2;
+constexpr ToolIdx TOOL4 = 3;
 
 /**
  * @brief The SurgicalToolManager class is designed to manage multiple surgical

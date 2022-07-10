@@ -3,14 +3,13 @@
 #include <cstdio>
 #include <cmath>
 
-enum SurgicalToolConfigID{
-    CONFIG_L_INSERT = 0,
-    CONFIG_PHI      = 1,
-    CONFIG_THETA1   = 2,
-    CONFIG_DELTA1   = 3,
-    CONFIG_THETA2   = 4,
-    CONFIG_DELTA2   = 5
-};
+using SurgicalToolConfigID = unsigned char;
+constexpr SurgicalToolConfigID CONFIG_L_INSERT = 0;
+constexpr SurgicalToolConfigID CONFIG_PHI      = 1;
+constexpr SurgicalToolConfigID CONFIG_THETA1   = 2;
+constexpr SurgicalToolConfigID CONFIG_DELTA1   = 3;
+constexpr SurgicalToolConfigID CONFIG_THETA2   = 4;
+constexpr SurgicalToolConfigID CONFIG_DELTA2   = 5;
 
 
 class SurgicalToolConfig

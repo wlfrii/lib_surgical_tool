@@ -38,7 +38,7 @@ public:
         return _elements[index];
     }
 
-    int count() const
+    int size() const
     {
         return _count;
     }

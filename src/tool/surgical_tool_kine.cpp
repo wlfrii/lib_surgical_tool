@@ -4,7 +4,7 @@
 void calcForwardKinematics(const ConfigSpcs& qs, TaskSpc& task_space)
 {
     mmath::Pose pose;
-    for(int i = 0; i < qs.count(); i++){
+    for(int i = 0; i < qs.size(); i++){
         auto& q = qs[i];
         mmath::continuum::calcSingleSegmentPose(q, pose);
         task_space.add(pose);

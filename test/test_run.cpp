@@ -16,8 +16,8 @@ int main()
 
     auto conf = st_manager.getConfigSpcs(ENDO);
     auto task = st_manager.getTaskSpc(ENDO);
-    printf("config size: %d\n", conf.count());
-    for(int i = 0; i < conf.count(); i++){
+    printf("config size: %d\n", conf.size());
+    for(int i = 0; i < conf.size(); i++){
         printf("-- %s\n", conf[i].info());
 
         printf("\t %s\n", task[i].info());

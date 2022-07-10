@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
-#include "../include/surgical_tool_manager.h"
+#include <surgical_tool_manager.h>
 
 TEST_CASE("surgical tool parameters", "[SurgicalToolDefine]")
 {
@@ -25,7 +25,7 @@ TEST_CASE("surgical tool parameters", "[SurgicalToolDefine]")
     SurgicalToolConfig config(L, phi, theta1, delta1, theta2, delta2);
     manager.updateConfig(ENDO, config);
     auto configspcs = manager.getConfigSpcs(ENDO);
-    REQUIRE(configspcs.count() == 4);
+    REQUIRE(configspcs.size() == 4);
     CHECK(configspcs[0].theta == Approx(0).margin(1e-6));
     CHECK(configspcs[0].delta == Approx(phi).margin(1e-6));
     CHECK(configspcs[0].length == Approx(0).margin(1e-6));
@@ -40,7 +40,7 @@ TEST_CASE("surgical tool parameters", "[SurgicalToolDefine]")
     CHECK(configspcs[3].length == Approx(Lg).margin(1e-6));
 
     auto task = manager.getTaskSpc(ENDO);
-    CHECK(configspcs.count() == configspcs.count());
+    REQUIRE(configspcs.size() == configspcs.size());
 
     mmath::Pose end_pose = manager.getEndPose(ENDO);
     CHECK(end_pose.R(0,0) == Approx(0.96430).margin(1e-6));
@@ -75,7 +75,7 @@ TEST_CASE("surgical tool kinematics", "[SurgicalToolKine]")
     CHECK(base_pose.t[1] == Approx(-7.85).margin(1e-6));
 
     auto configspcs = manager.getConfigSpcs(TOOL1);
-    REQUIRE(configspcs.count() == 5);
+    REQUIRE(configspcs.size() == 5);
     CHECK(configspcs[0].theta == Approx(0).margin(1e-6));
     CHECK(configspcs[0].delta == Approx(phi).margin(1e-6));
     CHECK(configspcs[0].length == Approx(0).margin(1e-6));
