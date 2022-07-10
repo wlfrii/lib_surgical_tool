@@ -40,7 +40,7 @@ SurgicalTool::~SurgicalTool()
 
 
 void SurgicalTool::initialize(const SurgicalToolParam &param,
-                              uint8_t tool_type, uint8_t gripper_type)
+                              SurgicalToolType tool_type, uint8_t gripper_type)
 {
     _param = param;
 
@@ -70,7 +70,11 @@ void SurgicalTool::updateConfig(const SurgicalToolConfig &config)
 
 void SurgicalTool::updateTarget(const mmath::Pose &pose)
 {
+    SurgicalToolConfig config;
+    /*bool flag = */calcInverseKinematicsC3(pose, _param, config);
+    _config = config;
 
+    forwardKinematics();
 }
 
 

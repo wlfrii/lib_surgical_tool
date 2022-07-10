@@ -29,7 +29,7 @@ public:
      * @param tool_type  The type of the surgical tool, see SurgicalToolType
      * @param gripper_type   The type of the gripper (not completed!!!)
      */
-    void initialize(const SurgicalToolParam &param, uint8_t tool_type,
+    void initialize(const SurgicalToolParam &param, SurgicalToolType tool_type,
                     uint8_t gripper_type);
 
     /**

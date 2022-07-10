@@ -10,7 +10,7 @@ SurgicalToolManager::SurgicalToolManager()
 
 
 void SurgicalToolManager::initialize(ToolIdx tool_id, const SurgicalToolParam &param,
-                uint8_t tool_type, uint8_t gripper_type)
+                SurgicalToolType tool_type, uint8_t gripper_type)
 {
     _tools[tool_id]->initialize(param, tool_type, gripper_type);
 }
@@ -19,6 +19,12 @@ void SurgicalToolManager::initialize(ToolIdx tool_id, const SurgicalToolParam &p
 void SurgicalToolManager::updateConfig(ToolIdx tool_id, const SurgicalToolConfig &config)
 {
     _tools[tool_id]->updateConfig(config);
+}
+
+
+void SurgicalToolManager::updateTarget(ToolIdx tool_id, const mmath::Pose &pose)
+{
+    _tools[tool_id]->updateTarget(pose);
 }
 
 

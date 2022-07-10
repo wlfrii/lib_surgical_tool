@@ -46,7 +46,7 @@ class SurgicalTool;
 constexpr unsigned char MAX_TOOL_NUM = 4;
 
 // Tool index
-using ToolIdx = uint8_t;
+using ToolIdx = unsigned char;
 constexpr ToolIdx TOOL1 = 0;
 constexpr ToolIdx TOOL2 = 1;
 constexpr ToolIdx TOOL3 = 2;
@@ -62,11 +62,12 @@ class SurgicalToolManager
 public:
     SurgicalToolManager();
 
-    void initialize(uint8_t ToolIdx, const SurgicalToolParam &param,
-                    uint8_t tool_type, uint8_t gripper_type);
-    void updateConfig(uint8_t ToolIdx, const SurgicalToolConfig &config);
-    void setGripperAngle(uint8_t ToolIdx, float type);
-    void setTao(uint8_t ToolIdx, float tao);
+    void initialize(ToolIdx tool_id, const SurgicalToolParam &param,
+                    SurgicalToolType tool_type, uint8_t gripper_type);
+    void updateConfig(ToolIdx tool_id, const SurgicalToolConfig &config);
+    void updateTarget(ToolIdx tool_id, const mmath::Pose &pose);
+    void setGripperAngle(ToolIdx tool_id, float type);
+    void setTao(ToolIdx tool_id, float tao);
 
     const SurgicalToolType&   getType(ToolIdx tool_id) const;
     const SurgicalToolConfig& getConfig(ToolIdx tool_id) const;
