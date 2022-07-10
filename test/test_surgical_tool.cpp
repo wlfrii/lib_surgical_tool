@@ -14,7 +14,7 @@ TEST_CASE("surgical tool parameters", "[SurgicalToolDefine]")
 
     SurgicalToolManager manager;
     manager.initialize(ENDO, param, SURGICAL_TOOL_TYPE_ENDOSCOPIC, 0);
-    CHECK(manager.getSurgicalToolType(ENDO) == SURGICAL_TOOL_TYPE_ENDOSCOPIC);
+    CHECK(manager.getType(ENDO) == SURGICAL_TOOL_TYPE_ENDOSCOPIC);
 
     float L = 254.099274;
     float phi = -0.284696;

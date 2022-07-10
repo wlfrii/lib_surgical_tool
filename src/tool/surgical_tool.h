@@ -75,13 +75,13 @@ public:
 	void reset();
 
 	/* Get() interfaces */
-    uint8_t	getSurgicalToolType() const;
-    const	SurgicalToolConfig&	getConfig() const;
-    const	SurgicalToolParam&	getParam() const;
-    const	mmath::Pose&    	getBasePose() const;
-    const	mmath::Pose&		getEndPose() const;
-	const 	ConfigSpcs& 		getConfigSpcs() const;
-	const   TaskSpc& 			getTaskSpc() const;
+    const SurgicalToolType&   getType() const;
+    const SurgicalToolConfig& getConfig() const;
+    const SurgicalToolParam&  getParam() const;
+    const mmath::Pose&    	  getBasePose() const;
+    const mmath::Pose&		  getEndPose() const;
+    const ConfigSpcs& 		  getConfigSpcs() const;
+    const TaskSpc& 			  getTaskSpc() const;
 	
 	/**
 	 * @brief Get the working space clouds of current instrument.

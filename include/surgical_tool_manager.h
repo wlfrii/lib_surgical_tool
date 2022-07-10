@@ -68,13 +68,13 @@ public:
     void setGripperAngle(uint8_t ToolIdx, float type);
     void setTao(uint8_t ToolIdx, float tao);
 
-    uint8_t	getSurgicalToolType(ToolIdx tool_id) const;
-    const	SurgicalToolConfig&	getConfig(ToolIdx tool_id) const;
-    const	SurgicalToolParam&	getParam(ToolIdx tool_id) const;
-    const	mmath::Pose&    	getBasePose(ToolIdx tool_id) const;
-    const	mmath::Pose&		getEndPose(ToolIdx tool_id) const;
-    const 	ConfigSpcs& 		getConfigSpcs(ToolIdx tool_id) const;
-    const   TaskSpc& 			getTaskSpc(ToolIdx tool_id) const;
+    const SurgicalToolType&   getType(ToolIdx tool_id) const;
+    const SurgicalToolConfig& getConfig(ToolIdx tool_id) const;
+    const SurgicalToolParam&  getParam(ToolIdx tool_id) const;
+    const mmath::Pose&    	  getBasePose(ToolIdx tool_id) const;
+    const mmath::Pose&		  getEndPose(ToolIdx tool_id) const;
+    const ConfigSpcs& 		  getConfigSpcs(ToolIdx tool_id) const;
+    const TaskSpc& 			  getTaskSpc(ToolIdx tool_id) const;
 
 private:
     std::array<std::shared_ptr<SurgicalTool>, MAX_TOOL_NUM> _tools;

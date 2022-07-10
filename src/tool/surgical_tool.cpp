@@ -103,7 +103,7 @@ void SurgicalTool::reset()
 }
 
 
-uint8_t SurgicalTool::getSurgicalToolType() const
+const SurgicalToolType& SurgicalTool::getType() const
 {
     return _type;
 }
