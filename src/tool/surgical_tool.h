@@ -18,7 +18,7 @@ class ConfigSpcsBuilder;
 class SurgicalTool
 {
 public:
-    SurgicalTool();
+    SurgicalTool(const mmath::Pose &base_pose = mmath::Pose());
     ~SurgicalTool();
 
     /**

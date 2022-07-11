@@ -1,4 +1,4 @@
-set(TEST_NAME "${PROJECT_NAME}_run")
+set(TEST_NAME "test_${PROJECT_NAME}_run")
 message("==== Build Test: ${TEST_NAME} ====")
 
 add_executable(${TEST_NAME}
@@ -8,19 +8,7 @@ target_link_libraries(${TEST_NAME}
     ${PROJECT_NAME}
 )
 
-
-#set(TEST_NAME "${PROJECT_NAME}_ik")
-#message("==== Build Test: ${TEST_NAME} ====")
-
-#add_executable(${TEST_NAME}
-#    test_ik.cpp
-#)
-#target_link_libraries(${TEST_NAME}
-#    ${PROJECT_NAME}
-#)
-
-
-set(TEST_NAME "${PROJECT_NAME}_test")
+set(TEST_NAME "test_${PROJECT_NAME}_catch2")
 message("==== Build Test: ${TEST_NAME} ====")
 
 # file(GLOB_RECURSE SRCS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
@@ -35,4 +23,17 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${TEST_NAME}
     PUBLIC
         ${PROJECT_NAME}
+)
+
+
+set(TEST_NAME "test_${PROJECT_NAME}_render")
+message("==== Build Test: ${TEST_NAME} ====")
+
+add_executable(${TEST_NAME}
+    test_render.cpp
+)
+
+target_link_libraries(${TEST_NAME}
+    ${PROJECT_NAME}
+    render_layer
 )

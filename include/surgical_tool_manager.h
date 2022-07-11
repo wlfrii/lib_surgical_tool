@@ -42,16 +42,17 @@
 
 class SurgicalTool;
 
-// Max surgical tool number
 constexpr unsigned char MAX_TOOL_NUM = 4;
 
 // Tool index
-using ToolIdx = unsigned char;
-constexpr ToolIdx TOOL1 = 0;
-constexpr ToolIdx TOOL2 = 1;
-constexpr ToolIdx TOOL3 = 2;
-constexpr ToolIdx ENDO  = 2;
-constexpr ToolIdx TOOL4 = 3;
+enum SurgicalToolIdx
+{
+    TOOL1 = 0,
+    TOOL2 = 1,
+    TOOL3 = 2,
+    ENDO  = 2,
+    TOOL4 = 3
+};
 
 /**
  * @brief The SurgicalToolManager class is designed to manage multiple surgical
@@ -62,20 +63,20 @@ class SurgicalToolManager
 public:
     SurgicalToolManager();
 
-    void initialize(ToolIdx tool_id, const SurgicalToolParam &param,
+    void initialize(SurgicalToolIdx tool_id, const SurgicalToolParam &param,
                     SurgicalToolType tool_type, uint8_t gripper_type);
-    void updateConfig(ToolIdx tool_id, const SurgicalToolConfig &config);
-    void updateTarget(ToolIdx tool_id, const mmath::Pose &pose);
-    void setGripperAngle(ToolIdx tool_id, float type);
-    void setTao(ToolIdx tool_id, float tao);
+    void updateConfig(SurgicalToolIdx tool_id, const SurgicalToolConfig &config);
+    void updateTarget(SurgicalToolIdx tool_id, const mmath::Pose &pose);
+    void setGripperAngle(SurgicalToolIdx tool_id, float type);
+    void setTao(SurgicalToolIdx tool_id, float tao);
 
-    const SurgicalToolType&   getType(ToolIdx tool_id) const;
-    const SurgicalToolConfig& getConfig(ToolIdx tool_id) const;
-    const SurgicalToolParam&  getParam(ToolIdx tool_id) const;
-    const mmath::Pose&    	  getBasePose(ToolIdx tool_id) const;
-    const mmath::Pose&		  getEndPose(ToolIdx tool_id) const;
-    const ConfigSpcs& 		  getConfigSpcs(ToolIdx tool_id) const;
-    const TaskSpc& 			  getTaskSpc(ToolIdx tool_id) const;
+    const SurgicalToolType&   getType(SurgicalToolIdx tool_id) const;
+    const SurgicalToolConfig& getConfig(SurgicalToolIdx tool_id) const;
+    const SurgicalToolParam&  getParam(SurgicalToolIdx tool_id) const;
+    const mmath::Pose&    	  getBasePose(SurgicalToolIdx tool_id) const;
+    const mmath::Pose&		  getEndPose(SurgicalToolIdx tool_id) const;
+    const ConfigSpcs& 		  getConfigSpcs(SurgicalToolIdx tool_id) const;
+    const TaskSpc& 			  getTaskSpc(SurgicalToolIdx tool_id) const;
 
 private:
     std::array<std::shared_ptr<SurgicalTool>, MAX_TOOL_NUM> _tools;

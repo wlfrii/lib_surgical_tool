@@ -1,32 +1,14 @@
 #include "surgical_tool.h"
 #include "../configspcs/configspcs_factory.h"
-#include "../define/marray.h"
 #include "../include/define/surgical_tool_kine.h"
 #include <utility>
 
-namespace
-{
-    /* Single port distribution
-     *        3
-     *		2	4
-     *		  1
-	 */
-	Eigen::Matrix3f I3 = Eigen::Matrix3f::Identity(3, 3);
-	// The pose with respect to the real single port trocar
-    mArray<mmath::Pose, 4> real_pose = {
-        mmath::Pose(I3, { 0.0f, -7.85f, 0.f }),
-        mmath::Pose(I3, { 7.66f, -1.7f, 0.f }),
-        mmath::Pose(I3, { 0.0f, 5.8f, 0.f - 15 }),
-        mmath::Pose(I3, { -7.66f, -1.7f,  0.f })
-	};
-}
 
-
-SurgicalTool::SurgicalTool()
+SurgicalTool::SurgicalTool(const mmath::Pose &base_pose)
     : _type(SURGICAL_TOOL_TYPE_UNKNOWN)
     , _gripper_type(0)
     , _gripper_angle(0)
-    , _base_pose(::real_pose.get())
+    , _base_pose(base_pose)
     , _end_pose(_base_pose)
     , _config_spcs_builder(nullptr)
 {
