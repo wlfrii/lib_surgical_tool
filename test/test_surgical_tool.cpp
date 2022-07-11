@@ -111,7 +111,7 @@ TEST_CASE("surgical tool kinematics", "[SurgicalToolKine]")
     SurgicalToolConfig config_ik;
     bool flag = calcInverseKinematicsC3(target, tool_param, config_ik);
     REQUIRE(flag == true);
-    CHECK(config_ik.L_insert == Approx(L).margin(1e-6));
+    CHECK(config_ik.L_insert + 30 + 19.4 == Approx(L).margin(1e-6));
     CHECK(config_ik.phi == Approx(phi).margin(1e-6));
     CHECK(config_ik.theta1 == Approx(theta1).margin(1e-6));
     CHECK(config_ik.delta1 == Approx(delta1).margin(1e-6));
@@ -143,7 +143,7 @@ TEST_CASE("surgical tool kinematics", "[SurgicalToolKine]")
 
     flag = calcInverseKinematicsC3(target, tool_param, config_ik);
     REQUIRE(flag == true);
-    CHECK(config_ik.L_insert == Approx(L).margin(1e-6));
+    CHECK(config_ik.L_insert + 30 + 19.4 == Approx(L).margin(1e-6));
     CHECK(config_ik.phi == Approx(phi).margin(1e-6));
     CHECK(config_ik.theta1 == Approx(theta1).margin(1e-6));
     CHECK(config_ik.delta1 == Approx(delta1).margin(1e-6));

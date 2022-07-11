@@ -54,6 +54,9 @@ void SurgicalTool::updateTarget(const mmath::Pose &pose)
 {
     SurgicalToolConfig config;
     /*bool flag = */calcInverseKinematicsC3(pose, _param, config);
+    if(_type == SURGICAL_TOOL_TYPE_SP_TOOL){
+        config.L_insert += _param.getL2() + _param.getLr();
+    }
     _config = config;
 
     forwardKinematics();

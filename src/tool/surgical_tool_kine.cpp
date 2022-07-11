@@ -200,7 +200,7 @@ bool calcInverseKinematicsC3(const mmath::Pose &pose,
     else                L1 = l1*theta1 / tan(theta1 / 2.f);
 
     config.set(theta1, CONFIG_THETA1);
-    config.set(L1 + L2 + Lr, CONFIG_L_INSERT);
+    config.set(L1, CONFIG_L_INSERT);
 
     /*
      * out of dexterous workspace
