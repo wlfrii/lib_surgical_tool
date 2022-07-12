@@ -85,6 +85,8 @@ int main()
     tool_layers = addLayer(tool_layers, configspcs_t, taskspc_t, radius,
                       manager.getType(TOOL1));
 
+    LayerViewPort viewport(width, height);
+
     while (!window.shouldClose()) {
         window.activate();
         window.clear();
@@ -94,13 +96,13 @@ int main()
         for(int i = 0; i < configspcs_e.size(); i++){
             auto layer = dynamic_cast<LayerModel*>(endo_layers[i]);
             layer->setModel(model_base);
-            layer->render(LAYER_RENDER_LEFT);
+            layer->render(viewport, LAYER_RENDER_LEFT);
             model_base *= cvt2GlmMat4(taskspc_e[i]);
         }
 
         LayerSegment* layer_seg = dynamic_cast<LayerSegment*>(tool_layers[1]);
         //if (theta1 < 0) delta1 = delta1 + M_PI;
-        layer_seg->setProperty({17.989237, theta1, delta1, radius});
+        layer_seg->setProperty(17.989237, theta1, delta1, radius);
         taskspc_t[1] = mmath::continuum::calcSingleSegmentPose(17.989237, theta1, delta1);
 //        layer_seg = dynamic_cast<LayerSegment*>(tool_layers[3]);
 //        layer_seg->setProperty({17.989237, theta1, delta1, radius});
@@ -110,7 +112,7 @@ int main()
         for(int i = 0; i < configspcs_t.size(); i++){
             auto layer = dynamic_cast<LayerModel*>(tool_layers[i]);
             layer->setModel(model_base);
-            layer->render(LAYER_RENDER_LEFT);
+            layer->render(viewport, LAYER_RENDER_LEFT);
             model_base *= cvt2GlmMat4(taskspc_t[i]);
         }
 
@@ -153,15 +155,15 @@ std::vector<Layer*>& addLayer(std::vector<Layer*>& layers,
 
         LayerModel* layer_obj;
         if(q.is_bend){
-            layer_obj = new LayerSegment(width, height, LAYER_RENDER_2D, color, {len, q.theta, q.delta, radius});
+            layer_obj = new LayerSegment(len, q.theta, q.delta, radius, color);
         }
         else{
             if(i == configspcs.size() - 1 &&
                     type == SURGICAL_TOOL_TYPE_SP_TOOL){
-                layer_obj = new LayerGripper(width, height, LAYER_RENDER_2D, color, GRIPPER_NEEDLE_HOLDER);
+                layer_obj = new LayerGripper(color, GRIPPER_NEEDLE_HOLDER);
             }
             else{
-                layer_obj = new LayerCylinder(width, height, LAYER_RENDER_2D, color, {glm::vec3(0.f, 0.f, 0.f), len, radius});
+                layer_obj = new LayerCylinder(len, radius, color);
             }
         }
         layer_obj->setModel(model_base);
