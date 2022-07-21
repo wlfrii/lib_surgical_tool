@@ -17,14 +17,14 @@ target_link_libraries(${TEST_NAME}
 )
 
 
-set(TEST_NAME "test_${PROJECT_NAME}_render")
+set(TEST_NAME "test_${PROJECT_NAME}_rendering")
 message("==== Build Test: ${TEST_NAME} ====")
 
 add_executable(${TEST_NAME}
-    test_render.cpp
+    test_rendering.cpp
 )
 
 target_link_libraries(${TEST_NAME}
     ${PROJECT_NAME}
-    render_layer
+    lib_render_layer
 )

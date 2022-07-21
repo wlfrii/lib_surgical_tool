@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(surgical_tool
+project(lib_surgical_tool
     VERSION 1.1.0
     DESCRIPTION "A library for continuum surgical tool"
     LANGUAGES CXX)

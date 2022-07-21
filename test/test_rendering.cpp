@@ -10,21 +10,26 @@ void keyboardControlModel(GLFWwindow* window);
 
 int height = 1080;
 int width = 1920;
-glm::mat4 model = glm::mat4(-0.290462,-0.251291,0.923312,0.000000,
-                            -0.620875,-0.684736,-0.381675,0.000000,
-                            0.728125,-0.684110,0.042866,0.000000,
-                            -41.451847,16.748739,106.138512,1.000000);
+//glm::mat4 model = glm::mat4(-0.290462,-0.251291,0.923312,0.000000,
+//                            -0.620875,-0.684736,-0.381675,0.000000,
+//                            0.728125,-0.684110,0.042866,0.000000,
+//                            -41.451847,16.748739,106.138512,1.000000);
+glm::mat4 model = glm::mat4(-0.938609,-0.313160,0.144710,0.000000,
+                            0.183933,-0.809167,-0.558042,0.000000,
+                            0.291849,-0.497167,0.817095,0.000000,
+                            -30.128639,16.239712,56.615814,1.000000);
 
 float theta1 = 0;
 float theta2 = 0;
 
-std::vector<Layer*>& addLayer(std::vector<Layer*>& layers, const ConfigSpcs &configspcs, const TaskSpc &taskspc, float radius, SurgicalToolType type);
+std::vector<LayerModel*>& addLayer(std::vector<LayerModel*>& layers, const ConfigSpcs &configspcs, const TaskSpc &taskspc, float radius, SurgicalToolType type);
 
 int main()
 {
     gl_util::Window window(width, height);
     window.enableDepthTest();
     window.setKeyboardEventCallBack(keyboardControlModel);
+    window.setBackgroundColor(255, 255, 255);
 
     // Init Surgical Tool
     float L1 = 19.990801;
@@ -54,13 +59,20 @@ int main()
     SurgicalToolParam tool_param(L1, Lr, L2, Lg, radius);
     manager.initialize(TOOL1, tool_param, SURGICAL_TOOL_TYPE_SP_TOOL, 0);
     L = 17.989237 + tool_param.getL2() + tool_param.getLr();
-    phi = 0.211825;
+    phi = 0.211825 - 0.7;
     theta1 = 0.706244;
     delta1 = -2.018124;
-    theta2 = 0.912775;
+    theta2 = 0.912775 + 0.5;
     delta2 = 1.011369;
     config = SurgicalToolConfig(L, phi, theta1, delta1, theta2, delta2);
     manager.updateConfig(TOOL1, config);
+
+    Eigen::Matrix4f T;
+    T << 0.606682, -0.361013, -0.708243, 14.073707,
+            -0.139614, 0.828697, -0.542006, 7.594316,
+            0.782589, 0.427706, 0.452352, 21.921993,
+            0,0,0,1.000000;
+    //manager.updateTarget(TOOL1, mmath::Pose(T));
 
     // Init Render property
     glm::mat4 view = glm::rotate(glm::mat4(1.0), glm::radians(180.f),
@@ -69,10 +81,10 @@ int main()
     LayerModel::setView(view, 0);
     view[3][0] -= 4.f;
     LayerModel::setView(view, 1);
-    gl_util::Projection gl_proj(1120, 960, 540, width, height, 0.2, 150);
+    gl_util::Projection gl_proj(1120, 960, 540, width, height, 0.2, 300);
     LayerModel::setProjection(gl_proj.mat4());
 
-    std::vector<Layer*> endo_layers, tool_layers;
+    std::vector<LayerModel*> endo_layers, tool_layers;
     // Build endoscope
     auto configspcs_e = manager.getConfigSpcs(ENDO);
     auto taskspc_e = manager.getTaskSpc(ENDO);
@@ -101,11 +113,11 @@ int main()
         }
 
         LayerSegment* layer_seg = dynamic_cast<LayerSegment*>(tool_layers[1]);
-        //if (theta1 < 0) delta1 = delta1 + M_PI;
         layer_seg->setProperty(17.989237, theta1, delta1, radius);
         taskspc_t[1] = mmath::continuum::calcSingleSegmentPose(17.989237, theta1, delta1);
 //        layer_seg = dynamic_cast<LayerSegment*>(tool_layers[3]);
-//        layer_seg->setProperty({17.989237, theta1, delta1, radius});
+//        layer_seg->setProperty(L2, theta2, delta2);
+//        taskspc_t[3] = mmath::continuum::calcSingleSegmentPose(L2, theta2, delta2);
 
         auto tool_base = manager.getBasePose(TOOL1);
         model_base = model*cvt2GlmMat4(tool_base);
@@ -138,7 +150,7 @@ int main()
 }
 
 
-std::vector<Layer*>& addLayer(std::vector<Layer*>& layers,
+std::vector<LayerModel*>& addLayer(std::vector<LayerModel*>& layers,
                               const ConfigSpcs & configspcs,
                               const TaskSpc &taskspc, float radius,
                               SurgicalToolType type)
@@ -179,7 +191,7 @@ std::vector<Layer*>& addLayer(std::vector<Layer*>& layers,
 void keyboardControlModel(GLFWwindow* window)
 {
     float step = 0.5;
-    float r_step = 3.f;
+    float r_step = 0.1f;
 
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
         glfwSetWindowShouldClose(window, true);
