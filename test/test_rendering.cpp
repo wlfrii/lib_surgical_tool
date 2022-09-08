@@ -14,10 +14,14 @@ int width = 1920;
 //                            -0.620875,-0.684736,-0.381675,0.000000,
 //                            0.728125,-0.684110,0.042866,0.000000,
 //                            -41.451847,16.748739,106.138512,1.000000);
-glm::mat4 model = glm::mat4(-0.938609,-0.313160,0.144710,0.000000,
-                            0.183933,-0.809167,-0.558042,0.000000,
-                            0.291849,-0.497167,0.817095,0.000000,
-                            -30.128639,16.239712,56.615814,1.000000);
+//glm::mat4 model = glm::mat4(-0.938609,-0.313160,0.144710,0.000000,
+//                            0.183933,-0.809167,-0.558042,0.000000,
+//                            0.291849,-0.497167,0.817095,0.000000,
+//                            -30.128639,16.239712,56.615814,1.000000);
+glm::mat4 model = glm::mat4(-0.018601,0.546634,-0.837182,0.000000,
+                            0.275367,-0.802134,-0.529870,0.000000,
+                            -0.961168,-0.240387,-0.135606,0.000000,
+                            69.478844,-4.693328,113.745789,1.000000);
 
 float theta1 = 0;
 float theta2 = 0;
@@ -29,7 +33,7 @@ int main()
     gl_util::Window window(width, height);
     window.enableDepthTest();
     window.setKeyboardEventCallBack(keyboardControlModel);
-    window.setBackgroundColor(255, 255, 255);
+//    window.setBackgroundColor(255, 255, 255);
 
     // Init Surgical Tool
     float L1 = 19.990801;
@@ -191,7 +195,7 @@ std::vector<LayerModel*>& addLayer(std::vector<LayerModel*>& layers,
 void keyboardControlModel(GLFWwindow* window)
 {
     float step = 0.5;
-    float r_step = 0.1f;
+    float r_step = 0.2f;
 
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
         glfwSetWindowShouldClose(window, true);
