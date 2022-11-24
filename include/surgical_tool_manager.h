@@ -24,10 +24,10 @@
  * --------------------------------------------------------------------
  * Change History:                        
  * 
- * 2021.7.30 Complete this library and create this file.
+ * 2022.11.24 Complete the doxygen comments.
  * 2022.6.29 Refactor the code by adding the manager to manage single
  * port surgery mode.
- * 
+ * 2021.7.30 Complete this library and create this file.
  * -------------------------------------------------------------------*/
 #ifndef SURGICAL_TOOL_MANAGER_H_LF
 #define SURGICAL_TOOL_MANAGER_H_LF
@@ -55,27 +55,134 @@ enum SurgicalToolIdx
 };
 
 /**
- * @brief The SurgicalToolManager class is designed to manage multiple surgical
+ * @brief The SurgicalToolManager class is designed to manage 4 surgical
  * tools which are consisted with continuum.
+ * NOTE, the default setting for the 4-surgical tools is single port access.
+ * Thus, the poses for these tools are all w.r.t frame {Trocar}.
  */
 class SurgicalToolManager
 {
 public:
     SurgicalToolManager();
 
+    /**
+     * @brief Initialize the surgical tool object with tool structure parameters
+     * and types of of the tool and its gripper.
+     * 
+     * @param tool_id The tool index
+     * @param param  The structure parameters
+     * @param tool_type  The type of the surgical tool, see SurgicalToolType
+     * @param gripper_type   The type of the gripper
+     */
     void initialize(SurgicalToolIdx tool_id, const SurgicalToolParam &param,
                     SurgicalToolType tool_type, uint8_t gripper_type);
+
+
+    /**
+     * @brief Update the configures of the surgical tool. (forward kinematics)
+     * 
+     * @param tool_id The tool index
+     * @param config
+     */                
     void updateConfig(SurgicalToolIdx tool_id, const SurgicalToolConfig &config);
+
+
+    /**
+     * @brief Update the target of the surgical tool. (inverse kinematics).
+     * NOTE, the target should w.r.t the base frame of the surgical tool.
+     * 
+     * @param tool_id The tool index
+     * @param pose 
+     */
     void updateTarget(SurgicalToolIdx tool_id, const mmath::Pose &pose);
-    void setGripperAngle(SurgicalToolIdx tool_id, float type);
+
+
+    /**
+     * @brief Set the gripper angle, if it has a active gripper.
+     * 
+     * @param tool_id The tool index
+     * @param angle 
+     */
+    void setGripperAngle(SurgicalToolIdx tool_id, float angle);
+
+
+    /**
+     * @brief Set the tao, which is a rotated angle w.r.t Endoscope's base.
+     * 
+     * @param tool_id The tool index
+     * @param tao 
+     */
     void setTao(SurgicalToolIdx tool_id, float tao);
 
+
+    /**
+     * @brief Reset this surigcal tool as unknow tool.
+     * 
+     * @param tool_id The tool index
+     */
+	void reset(SurgicalToolIdx tool_id);
+
+
+    /**
+	 * @brief Get the Surgical Tool Type
+	 * 
+     * @param tool_id The tool index
+	 * @return const SurgicalToolType& 
+	 */
     const SurgicalToolType&   getType(SurgicalToolIdx tool_id) const;
+
+
+    /**
+     * @brief Get the 2-segment continuum joint Configuration
+     * 
+     * @param tool_id The tool index
+     * @return const SurgicalToolConfig& 
+     */
     const SurgicalToolConfig& getConfig(SurgicalToolIdx tool_id) const;
+
+
+    /**
+     * @brief Get the Structure Parameters object
+     * 
+     * @param tool_id The tool index
+     * @return const SurgicalToolParam& 
+     */
     const SurgicalToolParam&  getParam(SurgicalToolIdx tool_id) const;
+
+
+    /**
+     * @brief Get the Base Pose of the continuum surgical tool w.r.t {Trocar}
+     * 
+     * @param tool_id The tool index
+     * @return const mmath::Pose& 
+     */
     const mmath::Pose&    	  getBasePose(SurgicalToolIdx tool_id) const;
+
+
+    /**
+     * @brief Get the End Pose of the continuum surgical tool w.r.t {Trocar}
+     * 
+     * @param tool_id The tool index
+     * @return const mmath::Pose& 
+     */
     const mmath::Pose&		  getEndPose(SurgicalToolIdx tool_id) const;
+
+
+    /**
+     * @brief Get current Configuration Spaces
+     * 
+     * @param tool_id The tool index
+     * @return const ConfigSpcs& 
+     */
     const ConfigSpcs& 		  getConfigSpcs(SurgicalToolIdx tool_id) const;
+
+
+    /**
+     * @brief Get current Task Sapce
+     * 
+     * @param tool_id The tool index
+     * @return const TaskSpc& 
+     */
     const TaskSpc& 			  getTaskSpc(SurgicalToolIdx tool_id) const;
 
 private:

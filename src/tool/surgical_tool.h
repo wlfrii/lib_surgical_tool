@@ -50,9 +50,9 @@ public:
     /**
      * @brief Set the gripper angle, if it has a active gripper.
      * 
-     * @param type 
+     * @param angle 
      */
-	void setGripperAngle(float type);
+	void setGripperAngle(float angle);
 
     /**
      * @brief Set the tao, which is a rotated angle w.r.t Endoscope's base.
@@ -74,13 +74,53 @@ public:
      */
 	void reset();
 
-	/* Get() interfaces */
+	/**
+	 * @brief Get the Surgical Tool Type
+	 * 
+	 * @return const SurgicalToolType& 
+	 */
     const SurgicalToolType&   getType() const;
+
+    /**
+     * @brief Get the 2-segment continuum joint Configuration
+     * 
+     * @return const SurgicalToolConfig& 
+     */
     const SurgicalToolConfig& getConfig() const;
+
+    /**
+     * @brief Get the Structure Parameters object
+     * 
+     * @return const SurgicalToolParam& 
+     */
     const SurgicalToolParam&  getParam() const;
+
+    /**
+     * @brief Get the Base Pose of the continuum surgical tool w.r.t {Trocar}
+     * 
+     * @return const mmath::Pose& 
+     */
     const mmath::Pose&    	  getBasePose() const;
+
+    /**
+     * @brief Get the End Pose of the continuum surgical tool w.r.t {Trocar}
+     * 
+     * @return const mmath::Pose& 
+     */
     const mmath::Pose&		  getEndPose() const;
+
+    /**
+     * @brief Get current Configuration Spaces
+     * 
+     * @return const ConfigSpcs& 
+     */
     const ConfigSpcs& 		  getConfigSpcs() const;
+
+    /**
+     * @brief Get current Task Sapce
+     * 
+     * @return const TaskSpc& 
+     */
     const TaskSpc& 			  getTaskSpc() const;
 	
 	/**

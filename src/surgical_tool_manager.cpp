@@ -64,6 +64,12 @@ void SurgicalToolManager::setTao(SurgicalToolIdx tool_id, float tao)
 }
 
 
+void SurgicalToolManager::reset(SurgicalToolIdx tool_id)
+{
+    _tools[tool_id]->reset();
+}
+
+
 const SurgicalToolType& SurgicalToolManager::getType(SurgicalToolIdx tool_id) const
 {
     return _tools[tool_id]->getType();
