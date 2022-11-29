@@ -1,4 +1,5 @@
 #include "surgical_tool.h"
+#include "../configspcs/configspcs_builder.h"
 #include "../configspcs/configspcs_factory.h"
 #include "../include/define/surgical_tool_kine.h"
 #include <utility>
@@ -43,7 +44,7 @@ void SurgicalTool::updateConfig(const SurgicalToolConfig &config)
 {
     _config = config;
     if(_type == SURGICAL_TOOL_TYPE_ENDOSCOPIC){
-        _config.set(_config.L_insert - 225, CONFIG_L_INSERT);
+        _config.safeSet(CONFIG_L_INSERT, _config.L_insert - 225);
     }
 
     forwardKinematics();
@@ -119,6 +120,12 @@ const mmath::Pose& SurgicalTool::getBasePose() const
 const mmath::Pose& SurgicalTool::getEndPose() const
 {
     return _end_pose;
+}
+
+
+const mmath::Pose& SurgicalTool::getEnd2BasePose() const
+{
+    return _task_spc.end2base;
 }
 
 

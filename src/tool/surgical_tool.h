@@ -1,6 +1,6 @@
 #ifndef LIB_INSTRUMENT_H_LF
 #define LIB_INSTRUMENT_H_LF
-#include "../configspcs/configspcs_builder.h"
+#include "../../include/define/configspcs.h"
 #include "../../include/define/surgical_tool_param.h"
 #include "../../include/define/surgical_tool_config.h"
 #include "../../include/define/surgical_tool_type.h"
@@ -108,6 +108,16 @@ public:
      * @return const mmath::Pose& 
      */
     const mmath::Pose&		  getEndPose() const;
+
+
+    /**
+     * @brief Get the forward kinematics of the continuum surgical tool.
+     * Thus, the returned pose is w.r.t the base frame.
+     * 
+     * @return mmath::Pose& 
+     */
+    const mmath::Pose&        getEnd2BasePose() const;
+
 
     /**
      * @brief Get current Configuration Spaces

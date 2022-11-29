@@ -169,6 +169,16 @@ public:
 
 
     /**
+     * @brief Get the forward kinematics of the continuum surgical tool.
+     * Thus, the returned pose is w.r.t the base frame.
+     * 
+     * @param tool_id The tool index
+     * @return mmath::Pose& 
+     */
+    const mmath::Pose&        getEnd2BasePose(SurgicalToolIdx tool_id) const;
+
+
+    /**
      * @brief Get current Configuration Spaces
      * 
      * @param tool_id The tool index

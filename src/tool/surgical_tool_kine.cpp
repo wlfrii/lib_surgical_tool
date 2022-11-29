@@ -184,7 +184,7 @@ bool calcInverseKinematicsC3(const mmath::Pose &pose,
                     f3*cos(theta2) + f4;
         }
     }
-    config.set(theta2, CONFIG_THETA2);
+    config.safeSet(CONFIG_THETA2, theta2);
 
     /*
      * Solve theta1, L1
@@ -199,8 +199,8 @@ bool calcInverseKinematicsC3(const mmath::Pose &pose,
     if (theta1 <= 1e-4) L1 = l1 / (1.f / 2 + theta1*theta1 / 24);
     else                L1 = l1*theta1 / tan(theta1 / 2.f);
 
-    config.set(theta1, CONFIG_THETA1);
-    config.set(L1, CONFIG_L_INSERT);
+    config.safeSet(CONFIG_THETA1, theta1);
+    config.safeSet(CONFIG_L_INSERT, L1);
 
     /*
      * out of dexterous workspace
@@ -255,9 +255,9 @@ bool calcInverseKinematicsC3(const mmath::Pose &pose,
     float delta1 = delta1_plus_phi - phi;
     float delta2 = delta2_plus_phi - phi;
 
-    config.set(phi, CONFIG_PHI);
-    config.set(delta1, CONFIG_DELTA1);
-    config.set(delta2, CONFIG_DELTA2);
+    config.safeSet(CONFIG_PHI, phi);
+    config.safeSet(CONFIG_DELTA1, delta1);
+    config.safeSet(CONFIG_DELTA2, delta2);
 
     return flag;
 }

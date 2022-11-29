@@ -100,6 +100,12 @@ const mmath::Pose& SurgicalToolManager::getEndPose(SurgicalToolIdx tool_id) cons
 }
 
 
+const mmath::Pose& SurgicalToolManager::getEnd2BasePose(SurgicalToolIdx tool_id) const
+{
+    return _tools[tool_id]->getEnd2BasePose();
+}
+
+
 const ConfigSpcs& SurgicalToolManager::getConfigSpcs(SurgicalToolIdx tool_id) const
 {
     return _tools[tool_id]->getConfigSpcs();
