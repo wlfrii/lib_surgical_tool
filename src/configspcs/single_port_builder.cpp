@@ -25,6 +25,7 @@ void SinglePortBuilder::buildConfigSpcs(const SurgicalToolConfig& config, const 
     q.add(ConfigSpc(0, 0, param.getLg(), false));
 }
 
+
 ConfigSpcs& SinglePortBuilder::buildC3(const SurgicalToolConfig &config, const SurgicalToolParam &param, float L1, ConfigSpcs &q)
 {
     q.add(ConfigSpc(0, config.phi, MIN_LENGTH));

@@ -20,6 +20,7 @@ ConfigSpcs& ConfigSpcsBuilder::buildC1(const SurgicalToolConfig& config,
 	return q;
 }
 
+
 ConfigSpcs& ConfigSpcsBuilder::buildC2(const SurgicalToolConfig& config, const SurgicalToolParam& param, float Lr, ConfigSpcs &q)
 {
     q.add(ConfigSpc(0, config.phi, MIN_LENGTH));
