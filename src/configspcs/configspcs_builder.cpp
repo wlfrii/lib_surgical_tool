@@ -16,6 +16,7 @@ ConfigSpcs& ConfigSpcsBuilder::buildC1(const SurgicalToolConfig& config,
 {
     q.add(ConfigSpc(0, config.phi, MIN_LENGTH));
     q.add(ConfigSpc(config.theta2, config.delta2, L2, true));
+    q.space = ConfigSpcs::C1;
 	return q;
 }
 
@@ -24,5 +25,6 @@ ConfigSpcs& ConfigSpcsBuilder::buildC2(const SurgicalToolConfig& config, const S
     q.add(ConfigSpc(0, config.phi, MIN_LENGTH));
 	q.add(ConfigSpc(0, 0, Lr, false));
     q.add(ConfigSpc(config.theta2, config.delta2, param.getL2(), true));
+    q.space = ConfigSpcs::C2;
 	return q;
 }

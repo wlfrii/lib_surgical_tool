@@ -16,6 +16,10 @@ class ConfigSpcs
     : public ArrayRepo<mmath::continuum::ConfigSpc, MAX_SECTION_COUNT>
 {
 public:
+    enum Space {
+        C1 = 1, C2 = 2, C3 = 3, C4 = 4
+    };
+
     void clear()
     {
         for(int i = 0; i < _count; i++){
@@ -23,6 +27,8 @@ public:
         }
         _count = 0;
     }
+
+    Space space;
 };
 
 

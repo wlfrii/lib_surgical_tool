@@ -33,5 +33,6 @@ ConfigSpcs& TraditionalBuilder::buildC4(const SurgicalToolConfig &config, const 
     q.add(ConfigSpc(config.theta1, config.delta1, param.getL1(), true));
     q.add(ConfigSpc(0, 0, param.getLr(), false));
     q.add(ConfigSpc(config.theta2, config.delta2, param.getL2(), true));
+    q.space = ConfigSpcs::C4;
 	return q;
 }
