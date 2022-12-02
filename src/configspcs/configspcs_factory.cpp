@@ -2,6 +2,7 @@
 #include "traditional_builder.h"
 #include "single_port_builder.h"
 
+
 std::unique_ptr<ConfigSpcsBuilder> ConfigSpcsFactory::createConfigSpcsBuilder(const SurgicalToolType& type)
 {
     switch (type)

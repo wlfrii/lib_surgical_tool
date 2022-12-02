@@ -1,5 +1,7 @@
 #include "single_port_builder.h"
-#include "../tool/surgical_tool.h"
+#include "../include/define/surgical_tool_config.h"
+#include "../include/define/surgical_tool_param.h"
+
 
 extern const float MIN_LENGTH;
 
@@ -32,6 +34,6 @@ ConfigSpcs& SinglePortBuilder::buildC3(const SurgicalToolConfig &config, const S
     q.add(ConfigSpc(config.theta1, config.delta1, L1, true));
     q.add(ConfigSpc(0, 0, param.getLr(), false));
     q.add(ConfigSpc(config.theta2, config.delta2, param.getL2(), true));
-    q.space = ConfigSpcs::C3;
+    q.space_type = ConfigSpaceType::C3;
 	return q;
 }
