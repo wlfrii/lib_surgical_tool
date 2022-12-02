@@ -34,13 +34,7 @@
 #include <array>
 #include <memory>
 #include <lib_math/lib_math.h>
-#include "./define/configspcs.h"
-#include "./define/surgical_tool_type.h"
-#include "./define/surgical_tool_param.h"
-#include "./define/surgical_tool_config.h"
-#include "./define/surgical_tool_kine.h"
-
-class SurgicalTool;
+#include "surgical_tool.h"
 
 constexpr unsigned char MAX_TOOL_NUM = 4;
 

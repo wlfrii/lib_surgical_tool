@@ -1,9 +1,10 @@
 #ifndef LIB_INSTRUMENT_H_LF
 #define LIB_INSTRUMENT_H_LF
-#include "../../include/define/configspcs.h"
-#include "../../include/define/surgical_tool_param.h"
-#include "../../include/define/surgical_tool_config.h"
-#include "../../include/define/surgical_tool_type.h"
+#include "./define/configspcs.h"
+#include "./define/surgical_tool_param.h"
+#include "./define/surgical_tool_config.h"
+#include "./define/surgical_tool_type.h"
+#include "./define/surgical_tool_kine.h"
 #include <memory>
 #include <vector>
 #include <lib_math/lib_math.h>

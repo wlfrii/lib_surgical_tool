@@ -1,7 +1,6 @@
-#include "surgical_tool.h"
+#include "../include/surgical_tool.h"
 #include "../configspcs/configspcs_builder.h"
 #include "../configspcs/configspcs_factory.h"
-#include "../include/define/surgical_tool_kine.h"
 #include <utility>
 
 

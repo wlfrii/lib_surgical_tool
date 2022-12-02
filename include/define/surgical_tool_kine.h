@@ -5,6 +5,9 @@
 #include "surgical_tool_config.h"
 
 
+using Jacobian = Eigen::Matrix<float, 6, 6>;
+
+
 /**
  * @brief Calculate the forward kinematics of two-segment continuum robot.
  *
@@ -21,7 +24,6 @@ void calcForwardKinematics(const ConfigSpcs& qs, TaskSpc& task_space);
 TaskSpc calcForwardKinematics(const ConfigSpcs& qs);
 
 
-
 /**
  * @brief IKC3  Cacluate the inverse kinematics of two-segment continuum robot
  * that with C3 configuration.
@@ -35,5 +37,23 @@ TaskSpc calcForwardKinematics(const ConfigSpcs& qs);
 bool calcInverseKinematicsC3(const mmath::Pose &pose,
                              const SurgicalToolParam& param,
                              SurgicalToolConfig &config);
+
+
+/**
+ * @brief Calculate the Jacobian of two-segment continuum robot, w.r.t Velocity
+ *        and Angular-Velocity direction.
+ *
+ * @param qs        The configurations of the continuum robot
+ * @param Jacobian  The returned Jacobian
+ */
+void calcJacobian(const ConfigSpcs& qs, Jacobian& jacobian);
+
+
+/**
+ * @brief Override based on 'void calcJacobian()'.
+ */
+Jacobian calcJacobian(const ConfigSpcs& qs);
+
+
 
 #endif // LIB_SURGICAL_TOOL_KINE_H_LF

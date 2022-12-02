@@ -12,9 +12,9 @@ TEST_CASE("surgical tool parameters", "[SurgicalToolDefine]")
     float gamma3 = 0.026835;
     SurgicalToolParam param(L1, Lr, L2, Lg, r, gamma3);
 
-    SurgicalToolManager manager;
-    manager.initialize(ENDO, param, SURGICAL_TOOL_TYPE_ENDOSCOPIC, 0);
-    CHECK(manager.getType(ENDO) == SURGICAL_TOOL_TYPE_ENDOSCOPIC);
+    SurgicalTool tool;
+    tool.initialize(param, SURGICAL_TOOL_TYPE_ENDOSCOPIC, 0);
+    CHECK(tool.getType() == SURGICAL_TOOL_TYPE_ENDOSCOPIC);
 
     float L = 254.099274;
     float phi = -0.284696;
@@ -23,9 +23,10 @@ TEST_CASE("surgical tool parameters", "[SurgicalToolDefine]")
     float theta2 = 0.169437;
     float delta2 = -1.879464;
     SurgicalToolConfig config(L, phi, theta1, delta1, theta2, delta2);
-    manager.updateConfig(ENDO, config);
-    auto configspcs = manager.getConfigSpcs(ENDO);
+    tool.updateConfig(config);
+    auto configspcs = tool.getConfigSpcs();
     REQUIRE(configspcs.size() == 4);
+    REQUIRE(configspcs.space_type == ConfigSpaceType::C2);
     CHECK(configspcs[0].theta == Approx(0).margin(1e-6));
     CHECK(configspcs[0].delta == Approx(phi).margin(1e-6));
     CHECK(configspcs[0].length == Approx(0).margin(1e-6));
@@ -39,22 +40,80 @@ TEST_CASE("surgical tool parameters", "[SurgicalToolDefine]")
     CHECK(configspcs[3].delta == Approx(gamma3).margin(1e-6));
     CHECK(configspcs[3].length == Approx(Lg).margin(1e-6));
 
-    auto task = manager.getTaskSpc(ENDO);
-    REQUIRE(configspcs.size() == configspcs.size());
+    auto q = configspcs(ConfigSpcs::STEM_BASE);
+    CHECK(configspcs[0].theta == Approx(q.theta).margin(1e-6));
+    CHECK(configspcs[0].delta == Approx(q.delta).margin(1e-6));
+    CHECK(configspcs[0].length == Approx(q.length).margin(1e-6));
+    q = configspcs(ConfigSpcs::STEM_RIGID);
+    CHECK(configspcs[1].theta == Approx(q.theta).margin(1e-6));
+    CHECK(configspcs[1].delta == Approx(q.delta).margin(1e-6));
+    CHECK(configspcs[1].length == Approx(q.length).margin(1e-6));
+    q = configspcs(ConfigSpcs::STEM_SEG2);
+    CHECK(configspcs[2].theta == Approx(q.theta).margin(1e-6));
+    CHECK(configspcs[2].delta == Approx(q.delta).margin(1e-6));
+    CHECK(configspcs[2].length == Approx(q.length).margin(1e-6));
+    q = configspcs(ConfigSpcs::STEM_GRIPPER);
+    CHECK(configspcs[3].theta == Approx(q.theta).margin(1e-6));
+    CHECK(configspcs[3].delta == Approx(q.delta).margin(1e-6));
+    CHECK(configspcs[3].length == Approx(q.length).margin(1e-6));
 
-    mmath::Pose end_pose = manager.getEndPose(ENDO);
-    CHECK(end_pose.R(0,0) == Approx(0.96430).margin(1e-6));
-    CHECK(end_pose.R(0,1) == Approx(0.247452).margin(1e-6));
-    CHECK(end_pose.R(0,2) == Approx(-0.094289).margin(1e-6));
-    CHECK(end_pose.R(1,0) == Approx(-0.258922).margin(1e-6));
-    CHECK(end_pose.R(1,1) == Approx(0.955727).margin(1e-6));
-    CHECK(end_pose.R(1,2) == Approx(-0.139803).margin(1e-6));
-    CHECK(end_pose.R(2,0) == Approx(0.055520).margin(1e-6));
-    CHECK(end_pose.R(2,1) == Approx(0.159226).margin(1e-6));
-    CHECK(end_pose.R(2,2) == Approx(0.985680).margin(1e-6));
+
+    auto task = tool.getTaskSpc();
+    REQUIRE(configspcs.size() == task.size());
+    REQUIRE(configspcs.space_type == task.space_type);
+
+    mmath::Pose end_pose = tool.getEndPose();
+    CHECK(end_pose.R(0, 0) == Approx(0.964301).margin(1e-6));
+    CHECK(end_pose.R(0, 1) == Approx(0.247452).margin(1e-6));
+    CHECK(end_pose.R(0, 2) == Approx(-0.094289).margin(1e-6));
+    CHECK(end_pose.R(1, 0) == Approx(-0.258922).margin(1e-6));
+    CHECK(end_pose.R(1, 1) == Approx(0.955727).margin(1e-6));
+    CHECK(end_pose.R(1, 2) == Approx(-0.139803).margin(1e-6));
+    CHECK(end_pose.R(2, 0) == Approx(0.055520).margin(1e-6));
+    CHECK(end_pose.R(2, 1) == Approx(0.159226).margin(1e-6));
+    CHECK(end_pose.R(2, 2) == Approx(0.985680).margin(1e-6));
     CHECK(end_pose.t[0] == Approx(-3.068144).margin(1e-6));
-    CHECK(end_pose.t[1] == Approx(1.250816).margin(1e-6));
-    CHECK(end_pose.t[2] == Approx(32.200508).margin(1e-6));
+    CHECK(end_pose.t[1] == Approx(-4.54918).margin(1e-6));
+    CHECK(end_pose.t[2] == Approx(47.20051).margin(1e-6));
+
+    auto T = task(TaskSpc::POSE_1B_TO_BASE);
+    CHECK(T.R(0, 0) == Approx(0.959747).margin(1e-6));
+    CHECK(T.R(0, 1) == Approx(0.280866).margin(1e-6));
+    CHECK(T.R(1, 0) == Approx(-T.R(0, 1)).margin(1e-6));
+    CHECK(T.R(1, 1) == Approx(T.R(0, 0)).margin(1e-6));
+    CHECK(T.t[2] == Approx(0).margin(1e-6));
+
+    T = task(TaskSpc::POSE_2B_TO_1E);
+    CHECK(T.R.isIdentity());
+    CHECK(T.t[2] == Approx(1.086575).margin(1e-6));
+
+    T = task(TaskSpc::POSE_2E_TO_2B);
+    CHECK(T.R(0, 0) == Approx(0.998678).margin(1e-6));
+    CHECK(T.R(0, 1) == Approx(-0.004145).margin(1e-6));
+    CHECK(T.R(0, 2) == Approx(-0.051227).margin(1e-6));
+    CHECK(T.R(1, 0) == Approx(T.R(0, 1)).margin(1e-6));
+    CHECK(T.R(1, 1) == Approx(0.987001).margin(1e-6));
+    CHECK(T.R(1, 2) == Approx(-0.160658).margin(1e-6));
+    CHECK(T.R(2, 0) == Approx(-T.R(0, 2)).margin(1e-6));
+    CHECK(T.R(2, 1) == Approx(-T.R(1, 2)).margin(1e-6));
+    CHECK(T.R(2, 2) == Approx(0.985690).margin(1e-6));
+    CHECK(T.t[0] == Approx(-0.719228).margin(1e-6));
+    CHECK(T.t[1] == Approx(-2.255630).margin(1e-6));
+    CHECK(T.t[2] == Approx(27.878856).margin(1e-6));
+
+    T = task(TaskSpc::POSE_G_TO_2B);
+    CHECK(T.R(0, 0) == Approx(0.998208).margin(1e-6));
+    CHECK(T.R(0, 1) == Approx(-0.030940).margin(1e-6));
+    CHECK(T.R(0, 2) == Approx(-0.051227).margin(1e-6));
+    CHECK(T.R(1, 0) == Approx(0.022340).margin(1e-6));
+    CHECK(T.R(1, 1) == Approx(0.986757).margin(1e-6));
+    CHECK(T.R(1, 2) == Approx(-0.160658).margin(1e-6));
+    CHECK(T.R(2, 0) == Approx(0.055520).margin(1e-6));
+    CHECK(T.R(2, 1) == Approx(0.159226).margin(1e-6));
+    CHECK(T.R(2, 2) == Approx(0.985690).margin(1e-6));
+    CHECK(T.t[0] == Approx(-1.666932).margin(1e-6));
+    CHECK(T.t[1] == Approx(-5.227803).margin(1e-6));
+    CHECK(T.t[2] == Approx(46.113933).margin(1e-6));
 }
 
 
@@ -76,6 +135,7 @@ TEST_CASE("surgical tool kinematics", "[SurgicalToolKine]")
 
     auto configspcs = manager.getConfigSpcs(TOOL1);
     REQUIRE(configspcs.size() == 5);
+    REQUIRE(configspcs.space_type == ConfigSpaceType::C3);
     CHECK(configspcs[0].theta == Approx(0).margin(1e-6));
     CHECK(configspcs[0].delta == Approx(phi).margin(1e-6));
     CHECK(configspcs[0].length == Approx(0).margin(1e-6));
@@ -126,8 +186,7 @@ TEST_CASE("surgical tool kinematics", "[SurgicalToolKine]")
     delta2 = 0.113694;
     tool_config = SurgicalToolConfig(L, phi, theta1, delta1, theta2, delta2);
     manager.updateConfig(TOOL1, tool_config);
-    end_pose = manager.getEndPose(TOOL1);
-    target = base_pose.inverse() * end_pose;
+    target = manager.getEnd2BasePose(TOOL1);
     CHECK(target.R(0,0) == Approx(0.210556828377472).margin(1e-6));
     CHECK(target.R(0,1) == Approx(-0.161892079703181).margin(1e-6));
     CHECK(target.R(0,2) == Approx(0.964083386721812).margin(1e-6));
@@ -149,4 +208,60 @@ TEST_CASE("surgical tool kinematics", "[SurgicalToolKine]")
     CHECK(config_ik.delta1 == Approx(delta1).margin(1e-6));
     CHECK(config_ik.theta2 == Approx(theta2).margin(1e-6));
     CHECK(config_ik.delta2 == Approx(delta2).margin(1e-6));
+}
+
+
+TEST_CASE("surgical tool Jacobian", "[SurgicalToolKine]")
+{
+    ConfigSpcs qs;
+    qs.add(mmath::continuum::ConfigSpc(0, 0.131825, 0));
+    qs.add(mmath::continuum::ConfigSpc(0.816344, -1.516124, 25.989237, 1));
+    qs.add(mmath::continuum::ConfigSpc(0, 0, 30));
+    qs.add(mmath::continuum::ConfigSpc(1.237475, 0.113694, 19.4, 1));
+    qs.add(mmath::continuum::ConfigSpc(0, 0, 5.71));
+    qs.space_type = ConfigSpaceType::C3;
+
+    Jacobian J;
+    calcJacobian(qs, J);
+    CHECK(J(0, 0) == Approx(39.6991029705163).margin(1e-6));
+    CHECK(J(0, 1) == Approx(8.07794109763539).margin(1e-6));
+    CHECK(J(0, 2) == Approx(42.6444210769090).margin(1e-6));
+    CHECK(J(0, 3) == Approx(0.0715717297876824).margin(1e-6));
+    CHECK(J(0, 4) == Approx(6.28886880714537).margin(1e-6));
+    CHECK(J(0, 5) == Approx(-2.94531810639269).margin(1e-6));
+
+    CHECK(J(1, 0) == Approx(23.6874472660906).margin(1e-6));
+    CHECK(J(1, 1) == Approx(-42.8106381801440).margin(1e-6));
+    CHECK(J(1, 2) == Approx(13.1502997843457).margin(1e-6));
+    CHECK(J(1, 3) == Approx(-0.379308463732723).margin(1e-6));
+    CHECK(J(1, 4) == Approx(10.5964511118459).margin(1e-6));
+    CHECK(J(1, 5) == Approx(10.5371474817449).margin(1e-6));
+
+    CHECK(J(2, 0) == Approx(0).margin(1e-6));
+    CHECK(J(2, 1) == Approx(-39.9827358880642).margin(1e-6));
+    CHECK(J(2, 2) == Approx(-11.5969725477570).margin(1e-6));
+    CHECK(J(2, 3) == Approx(0.892573165460230).margin(1e-6));
+    CHECK(J(2, 4) == Approx(-8.03085879514480).margin(1e-6));
+    CHECK(J(2, 5) == Approx(11.5969725477570).margin(1e-6));
+
+    CHECK(J(3, 0) == Approx(0).margin(1e-6));
+    CHECK(J(3, 1) == Approx(0.982659720794466).margin(1e-6));
+    CHECK(J(3, 2) == Approx(-0.135104298214221).margin(1e-6));
+    CHECK(J(3, 3) == Approx(0).margin(1e-6));
+    CHECK(J(3, 4) == Approx(-0.184734378833011).margin(1e-6));
+    CHECK(J(3, 5) == Approx(-0.828979088507591).margin(1e-6));
+
+    CHECK(J(4, 0) == Approx(0).margin(1e-6));
+    CHECK(J(4, 1) == Approx(0.185418103560956).margin(1e-6));
+    CHECK(J(4, 2) == Approx(0.716011810128744).margin(1e-6));
+    CHECK(J(4, 3) == Approx(0).margin(1e-6));
+    CHECK(J(4, 4) == Approx(0.660904297735112).margin(1e-6));
+    CHECK(J(4, 5) == Approx(-0.694166736561761).margin(1e-6));
+
+    CHECK(J(5, 0) == Approx(1).margin(1e-6));
+    CHECK(J(5, 1) == Approx(0).margin(1e-6));
+    CHECK(J(5, 2) == Approx(0.315110288907621).margin(1e-6));
+    CHECK(J(5, 3) == Approx(0).margin(1e-6));
+    CHECK(J(5, 4) == Approx(0.727377974998171).margin(1e-6));
+    CHECK(J(5, 5) == Approx(0.420189850480678).margin(1e-6));
 }

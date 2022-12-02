@@ -10,6 +10,7 @@ void calcForwardKinematics(const ConfigSpcs& qs, TaskSpc& task_space)
         task_space.add(pose);
         task_space.end2base *= pose;
     }
+    task_space.space_type = qs.space_type;
 }
 
 
@@ -260,4 +261,92 @@ bool calcInverseKinematicsC3(const mmath::Pose &pose,
     config.safeSet(CONFIG_DELTA2, delta2);
 
     return flag;
+}
+
+
+void calcJacobianC3(const ConfigSpcs& qs, Jacobian& jacobian)
+{
+    assert(qs.size() == 5);
+
+    TaskSpc RTs = calcForwardKinematics(qs);
+
+    const auto& qb = qs[0];
+    const auto& q1 = qs[1];
+    const auto& qr = qs[2];
+    const auto& q2 = qs[3];
+    const auto& qg = qs[4];
+
+    Eigen::Vector3f J1v(0, 0, 0), J1w(0, 0, 1);
+
+    Eigen::Matrix<float, 3, 3> J2v, J2w;
+    mmath::continuum::calcVariableLengthWithRigidSegmentJacobian(
+                q1, qr.length, J2v, J2w);
+
+    Eigen::Matrix<float, 3, 2> J3v, J3w;
+    mmath::continuum::calcSingleWithRigidSegmentJacobian(
+                q2, qg.length, J3v, J3w);
+
+    auto R_1b_to_b = mmath::rotByZf(qb.delta);
+    auto T_g_to_1b = RTs(TaskSpc::POSE_G_TO_1B);
+    Eigen::Vector3f p_g_to_1e_under_1b = R_1b_to_b * T_g_to_1b.t;
+
+    auto T_g_to_2b = RTs(TaskSpc::POSE_G_TO_2B);
+    auto T_2b_to_1b = RTs(TaskSpc::POSE_2B_TO_1B);
+    Eigen::Vector3f p_g_to_2e_under_2b = T_2b_to_1b.R * T_g_to_2b.t;
+
+    auto R_2b_to_b = RTs(TaskSpc::POSE_2B_TO_BASE).R;
+
+    Eigen::Vector3f Jvpsi1 = J1v - mmath::skewSymmetricf(p_g_to_1e_under_1b) * J1w;
+    Eigen::Matrix<float, 3, 3> Jvpsi2 =
+            R_1b_to_b * (J2v - mmath::skewSymmetricf(p_g_to_2e_under_2b) * J2w);
+    Eigen::Matrix<float, 3, 2> Jvpsi3 = R_2b_to_b * J3v;
+
+    jacobian.block(0, 0, 3, 1) = Jvpsi1;
+    jacobian.block(0, 1, 3, 3) = Jvpsi2;
+    jacobian.block(0, 4, 3, 2) = Jvpsi3;
+    jacobian.block(3, 0, 3, 1) = J1w;
+    jacobian.block(3, 1, 3, 3) = R_1b_to_b * J2w;
+    jacobian.block(3, 4, 3, 2) = R_2b_to_b * J3w;
+
+    std::cout << jacobian << "\n";
+}
+
+
+
+void calcJacobian(const ConfigSpcs& qs, Jacobian& jacobian)
+{
+    switch (qs.space_type) {
+    case ConfigSpaceType::C1:
+    {
+        break;
+    }
+    case ConfigSpaceType::C2:
+    {
+        break;
+    }
+    case ConfigSpaceType::C3:
+    {
+        calcJacobianC3(qs, jacobian);
+        break;
+    }
+    case ConfigSpaceType::C4:
+    {
+        break;
+    }
+    case ConfigSpaceType::C0:
+    default:
+        jacobian = Jacobian::Zero();
+        printf("WARNING [%s]:"
+               "The Configuration space type should be [C1-C4]!!!\n",
+               __func__);
+        break;
+    }
+}
+
+
+Jacobian calcJacobian(const ConfigSpcs& qs)
+{
+    Jacobian jacobian;
+    calcJacobian(qs, jacobian);
+    return jacobian;
 }
