@@ -307,8 +307,6 @@ void calcJacobianC3(const ConfigSpcs& qs, Jacobian& jacobian)
     jacobian.block(3, 0, 3, 1) = J1w;
     jacobian.block(3, 1, 3, 3) = R_1b_to_b * J2w;
     jacobian.block(3, 4, 3, 2) = R_2b_to_b * J3w;
-
-    std::cout << jacobian << "\n";
 }
 
 
@@ -349,4 +347,37 @@ Jacobian calcJacobian(const ConfigSpcs& qs)
     Jacobian jacobian;
     calcJacobian(qs, jacobian);
     return jacobian;
+}
+
+
+void inverseJacobian(const Jacobian& jacobian, Jacobian& inv_jacobian)
+{
+    const float threshold = 1e-3f;
+    const float lambda = 1e-4f;
+
+    Eigen::JacobiSVD<Eigen::MatrixXf> svd(
+                jacobian, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    Eigen::Vector<float, 6> singular_values = svd.singularValues();
+    float devia = 0;
+    float min_singular_value = singular_values[5];
+    if(min_singular_value < threshold){
+        devia = lambda;
+    }
+    Eigen::Matrix<float, 6, 6> S =
+            Eigen::Matrix<float, 6, 6>::Identity();
+    for(int i = 0; i < 6; i++) {
+        S(i, i) = 1.0f / (singular_values[i] + devia);
+    }
+
+    Eigen::Matrix<float, 6, 6> U = svd.matrixU();
+    Eigen::Matrix<float, 6, 6> V = svd.matrixV();
+    inv_jacobian = V * S * U.transpose();
+}
+
+
+Jacobian inverseJacobian(const Jacobian& jacobian)
+{
+    Jacobian inv_jacobian;
+    inverseJacobian(jacobian, inv_jacobian);
+    return inv_jacobian;
 }

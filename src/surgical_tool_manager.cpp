@@ -46,9 +46,11 @@ void SurgicalToolManager::updateConfig(SurgicalToolIdx tool_id, const SurgicalTo
 }
 
 
-void SurgicalToolManager::updateTarget(SurgicalToolIdx tool_id, const mmath::Pose &pose)
+void SurgicalToolManager::updateTarget(SurgicalToolIdx tool_id,
+                                       const mmath::Pose &pose,
+                                       bool do_resolved_rates)
 {
-    _tools[tool_id]->updateTarget(pose);
+    _tools[tool_id]->updateTarget(pose, do_resolved_rates);
 }
 
 

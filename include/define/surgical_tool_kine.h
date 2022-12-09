@@ -55,5 +55,18 @@ void calcJacobian(const ConfigSpcs& qs, Jacobian& jacobian);
 Jacobian calcJacobian(const ConfigSpcs& qs);
 
 
+/**
+ * @brief inverseJacobian
+ *
+ * @param jacobian
+ * @param inv_jacobian
+ */
+void inverseJacobian(const Jacobian& jacobian, Jacobian& inv_jacobian);
+
+
+/**
+ * @brief Override based on 'void inverseJacobian()'.
+ */
+Jacobian inverseJacobian(const Jacobian& jacobian);
 
 #endif // LIB_SURGICAL_TOOL_KINE_H_LF

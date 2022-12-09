@@ -94,8 +94,9 @@ public:
             theta1 += value;
             if(theta1 < 0.f) {
                 theta1 *= -1.f;
-                safeAdd(CONFIG_DELTA2, 2.f*M_PI);
+                safeAdd(CONFIG_DELTA2, M_PI);
             }
+            else if(abs(theta1) < 1e-5) delta1 = 0;
             else if(theta1 > theta1_max) theta1 = theta1_max;
             break;
         case 3:
@@ -107,8 +108,9 @@ public:
             theta2 += value;
             if(theta2 < 0.f) {
                 theta2 *= -1.f;
-                safeAdd(CONFIG_DELTA2, 2.f*M_PI);
+                safeAdd(CONFIG_DELTA2, M_PI);
             }
+            else if(abs(theta2) < 1e-5) delta2 = 0;
             else if(theta2 > theta2_max) theta2 = theta1_max;
             break;
         case 5:
@@ -137,12 +139,14 @@ public:
                                      const SurgicalToolConfig& config)
     {
         int w = 12;
-        os << std::setw(w) << config.L_insert << " "
+        std::cout.setf(std::ios::fixed);
+        os << std::setw(w) << std::setprecision(6) << config.L_insert << " "
            << std::setw(w) << config.phi << " "
            << std::setw(w) << config.theta1 << " "
            << std::setw(w) << config.delta1 << " "
            << std::setw(w) << config.theta2 << " "
            << std::setw(w) << config.delta2;
+        std::cout.unsetf(std::ios::fixed);
         return os;
     }
 

@@ -22,6 +22,7 @@ public:
     SurgicalTool(const mmath::Pose &base_pose = mmath::Pose());
     ~SurgicalTool();
 
+
     /**
      * @brief Initialize the surgical tool object with tool structure parameters
      * and types of of the tool and its gripper.
@@ -33,6 +34,7 @@ public:
     void initialize(const SurgicalToolParam &param, SurgicalToolType tool_type,
                     uint8_t gripper_type);
 
+
     /**
      * @brief Update the configures of the surgical tool. (forward kinematics)
      * 
@@ -40,13 +42,22 @@ public:
      */
     void updateConfig(const SurgicalToolConfig &config);
 
+
     /**
      * @brief Update the target of the surgical tool. (inverse kinematics).
      * NOTE, the target should w.r.t the base frame of the surgical tool.
+     * And this function will called the analytic solution defaultly.
      * 
      * @param pose 
+     * @param do_resolved_rates  The flag specifies the method will be used.
+     *                           true - Use Jacobian based method
+     *                           false - Use analytic method
+     * @return The reach status
+     *         true - reach the target
+     *         false - cannot reach the target
      */
-    void updateTarget(const mmath::Pose &pose);
+    bool updateTarget(const mmath::Pose &pose, bool do_resolved_rates = false);
+
 
     /**
      * @brief Set the gripper angle, if it has a active gripper.
@@ -55,12 +66,14 @@ public:
      */
 	void setGripperAngle(float angle);
 
+
     /**
      * @brief Set the tao, which is a rotated angle w.r.t Endoscope's base.
      * 
      * @param tao 
      */
     void setTao(float tao);
+
 
     /**
      * @brief Set the base pose, if it is not single port mode.
@@ -69,11 +82,13 @@ public:
      */
     void setBasePose(const mmath::Pose &pose);
 
+
     /**
      * @brief Reset this surigcal tool as unknow tool.
      * 
      */
 	void reset();
+
 
 	/**
 	 * @brief Get the Surgical Tool Type
@@ -82,12 +97,14 @@ public:
 	 */
     const SurgicalToolType&   getType() const;
 
+
     /**
      * @brief Get the 2-segment continuum joint Configuration
      * 
      * @return const SurgicalToolConfig& 
      */
     const SurgicalToolConfig& getConfig() const;
+
 
     /**
      * @brief Get the Structure Parameters object
@@ -96,12 +113,14 @@ public:
      */
     const SurgicalToolParam&  getParam() const;
 
+
     /**
      * @brief Get the Base Pose of the continuum surgical tool w.r.t {Trocar}
      * 
      * @return const mmath::Pose& 
      */
     const mmath::Pose&    	  getBasePose() const;
+
 
     /**
      * @brief Get the End Pose of the continuum surgical tool w.r.t {Trocar}
@@ -127,6 +146,7 @@ public:
      */
     const ConfigSpcs& 		  getConfigSpcs() const;
 
+
     /**
      * @brief Get current Task Sapce
      * 
@@ -134,6 +154,7 @@ public:
      */
     const TaskSpc& 			  getTaskSpc() const;
 	
+
 	/**
 	 * @brief Get the working space clouds of current instrument.
 	 * 
@@ -142,8 +163,11 @@ public:
 	const std::vector<Eigen::Vector3f>& getWSClouds() const;
 
 private:
+    /* Forward kinematics from tool base to gripper tip */
     void forwardKinematics();
-    void inverseKinematics();
+
+    /* Inverse kinematics based resolved rates method */
+    bool resolvedRates(const mmath::Pose& pose);
 
 	void updateWorkingSpace();
 
