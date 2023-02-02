@@ -40,6 +40,13 @@ public:
 
     float getGamma3()   const	{   return _gamma3;    }
 
+    bool isEmpty() const {
+        float zero = 1e-2;
+        return _L1 < zero && _L1 > -zero && 
+               _Lr < zero && _Lr > -zero &&
+               _L2 < zero && _L2 > -zero;
+    }
+
     char* info() const {
         static char info[128];
         sprintf(info, "L1:%f,Lr:%f,L2:%f,Lg:%f,radius:%f,gamma3:%f",
