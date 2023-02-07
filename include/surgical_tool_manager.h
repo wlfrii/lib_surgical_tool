@@ -88,7 +88,7 @@ public:
      * @param tool_id The tool index
      * @param pose 
      */
-    void updateTarget(SurgicalToolIdx tool_id, const mmath::Pose &pose,
+    bool updateTarget(SurgicalToolIdx tool_id, const mmath::Pose &pose,
                       bool do_resolved_rates = false);
 
 

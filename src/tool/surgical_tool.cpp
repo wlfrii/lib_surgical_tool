@@ -215,7 +215,7 @@ bool SurgicalTool::resolvedRates(const mmath::Pose& pose)
 
     float dt = 0.001;                   // d time
     float epsilon_p_max = 0.01;         // mm
-    float epsilon_r_max = 0.02;         // rad
+    float epsilon_r_max = 0.002;        // rad
     float epsilon_p, epsilon_r;
 
     uint16_t max_iterations = 1000;
