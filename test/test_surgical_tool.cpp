@@ -221,8 +221,8 @@ TEST_CASE("surgical tool Jacobian", "[SurgicalToolKine]")
     qs.add(mmath::continuum::ConfigSpc(0, 0, 5.71));
     qs.space_type = ConfigSpaceType::C3;
 
-    Jacobian J;
-    calcJacobian(qs, J);
+    Jacobian jacobian = calcJacobian(qs);
+    auto& J = jacobian.matrix;
     CHECK(J(0, 0) == Approx(39.6991029705163).margin(1e-6));
     CHECK(J(0, 1) == Approx(8.07794109763539).margin(1e-6));
     CHECK(J(0, 2) == Approx(42.6444210769090).margin(1e-6));
