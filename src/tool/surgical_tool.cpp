@@ -214,8 +214,8 @@ bool SurgicalTool::resolvedRates(const mmath::Pose& pose)
     float w_limit = 1;
 
     float dt = 0.001;                   // d time
-    float epsilon_p_max = 0.01;         // mm
-    float epsilon_r_max = 0.002;        // rad
+    float epsilon_p_max = 0.02;         // mm
+    float epsilon_r_max = 0.02;         // rad
     float epsilon_p, epsilon_r;
 
     uint16_t max_iterations = 1000;
@@ -245,34 +245,43 @@ bool SurgicalTool::resolvedRates(const mmath::Pose& pose)
         Eigen::Vector<float, 6> dx;
         dx << dv[0], dv[1], dv[2], dw[0], dw[1], dw[2];
 
-        Jacobian J, inv_J;
-        calcJacobian(_config_spcs, J);
-        inverseJacobian(J, inv_J);
+        Jacobian J = calcJacobian(_config_spcs);
 
+
+#if 0 // Update 6-DoF
+        Jacobian inv_J(6, 6);
+        inverseJacobian(J, inv_J);
         Eigen::Vector<float, 6> dq = inv_J * dx;
         dq *= dt;
 
-        // There we just consider 'C3' for now.
-//        _config.L_insert += dq[3];
-//        _config.phi += dq[0];
-//        _config.theta1 += dq[1];
-//        _config.delta1 += dq[2];
-//        _config.theta2 += dq[4];
-//        _config.delta2 += dq[5];
         _config.safeAdd(CONFIG_L_INSERT, dq[3]);
-//        _config.safeAdd(CONFIG_PHI, dq[0]);
+        _config.safeAdd(CONFIG_PHI, dq[0]);
         _config.safeAdd(CONFIG_THETA1, dq[1]);
         _config.safeAdd(CONFIG_DELTA1, dq[2]);
         _config.safeAdd(CONFIG_THETA2, dq[4]);
         _config.safeAdd(CONFIG_DELTA2, dq[5]);
+#else // Update 5-DoF without phi
+        Jacobian J_without_phi = J.block(0, 1, 6, 5);
+        Jacobian inv_J(5, 6);
+        inverseJacobian(J_without_phi, inv_J);
+        Eigen::Vector<float, 5> dq = inv_J * dx;
+        dq *= dt;
+
+        _config.safeAdd(CONFIG_L_INSERT, dq[2]);
+        _config.safeAdd(CONFIG_THETA1, dq[0]);
+        _config.safeAdd(CONFIG_DELTA1, dq[1]);
+        _config.safeAdd(CONFIG_THETA2, dq[3]);
+        _config.safeAdd(CONFIG_DELTA2, dq[4]);
+#endif
 
         forwardKinematics();
     }
 
-//    if(!flag){
-//        printf("Resolved rates flag: %d, epsilon_p:[%.3f], epsilon_r:[%.3f] \n",
-//               flag, epsilon_p, epsilon_r);
-//    }
+#if 0
+        printf("updateTarget: Resolved rates flag: %d, epsilon_p:[%.3f], "
+               "epsilon_r:[%.3f] \n",
+               flag, epsilon_p, epsilon_r);
+#endif
 
     return flag;
 }
