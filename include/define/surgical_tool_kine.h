@@ -4,8 +4,15 @@
 #include "surgical_tool_param.h"
 #include "surgical_tool_config.h"
 
+namespace Eigen {
+using Matrix5f = Eigen::Matrix<float, 5, 5>;
+using Matrix6f = Eigen::Matrix<float, 6, 6>;
 
-using Jacobian = Eigen::Matrix<float, 6, 6>;
+using Vector5f = Eigen::Vector<float, 5>;
+using Vector6f = Eigen::Vector<float, 6>;
+}
+using Jacobian = Eigen::MatrixXf;
+
 
 
 /**
@@ -44,13 +51,8 @@ bool calcInverseKinematicsC3(const mmath::Pose &pose,
  *        and Angular-Velocity direction.
  *
  * @param qs        The configurations of the continuum robot
- * @param Jacobian  The returned Jacobian
- */
-void calcJacobian(const ConfigSpcs& qs, Jacobian& jacobian);
-
-
-/**
- * @brief Override based on 'void calcJacobian()'.
+ *
+ * @return Jacobian  The returned Jacobian
  */
 Jacobian calcJacobian(const ConfigSpcs& qs);
 

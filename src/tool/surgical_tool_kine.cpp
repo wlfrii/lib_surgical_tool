@@ -1,4 +1,5 @@
 #include "../include/define/surgical_tool_kine.h"
+#include <global.h>
 
 
 void calcForwardKinematics(const ConfigSpcs& qs, TaskSpc& task_space)
@@ -266,7 +267,9 @@ bool calcInverseKinematicsC3(const mmath::Pose &pose,
 
 void calcJacobianC3(const ConfigSpcs& qs, Jacobian& jacobian)
 {
-    assert(qs.size() == 5);
+    ASSERTM(qs.size() == 5, "ConfigScps.size should be 5");
+    ASSERTM(jacobian.rows() == 6 && jacobian.cols() == 6,
+           "The size of Jacobian matrix in C3 should be 6x6");
 
     TaskSpc RTs = calcForwardKinematics(qs);
 
@@ -310,8 +313,7 @@ void calcJacobianC3(const ConfigSpcs& qs, Jacobian& jacobian)
 }
 
 
-
-void calcJacobian(const ConfigSpcs& qs, Jacobian& jacobian)
+Eigen::MatrixXf calcJacobian(const ConfigSpcs& qs)
 {
     switch (qs.space_type) {
     case ConfigSpaceType::C1:
@@ -324,8 +326,9 @@ void calcJacobian(const ConfigSpcs& qs, Jacobian& jacobian)
     }
     case ConfigSpaceType::C3:
     {
+        Jacobian jacobian(6, 6);
         calcJacobianC3(qs, jacobian);
-        break;
+        return jacobian;
     }
     case ConfigSpaceType::C4:
     {
@@ -333,51 +336,51 @@ void calcJacobian(const ConfigSpcs& qs, Jacobian& jacobian)
     }
     case ConfigSpaceType::C0:
     default:
-        jacobian = Jacobian::Zero();
         printf("WARNING [%s]:"
                "The Configuration space type should be [C1-C4]!!!\n",
                __func__);
         break;
     }
-}
-
-
-Jacobian calcJacobian(const ConfigSpcs& qs)
-{
-    Jacobian jacobian;
-    calcJacobian(qs, jacobian);
-    return jacobian;
+    return Eigen::VectorXf::Zero(0);
 }
 
 
 void inverseJacobian(const Jacobian& jacobian, Jacobian& inv_jacobian)
 {
-    const float threshold = 1e-3f;
-    const float lambda = 1e-4f;
+    ASSERTM(jacobian.rows() == inv_jacobian.cols() &&
+            jacobian.cols() == inv_jacobian.rows(), "The size of "
+            "inverse Jacobian should equals to the inverse size of Jacobian")
+
+    constexpr float threshold = 1e-3f;
+    constexpr float lambda = 1e-4f;
+
+    int rows = jacobian.rows();
+    int cols = jacobian.cols();
+    int mindim = std::min(rows, cols);
 
     Eigen::JacobiSVD<Eigen::MatrixXf> svd(
                 jacobian, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    Eigen::Vector<float, 6> singular_values = svd.singularValues();
+    Eigen::VectorXf singular_values = svd.singularValues();
     float devia = 0;
-    float min_singular_value = singular_values[5];
+    float min_singular_value = singular_values[mindim - 1];
     if(min_singular_value < threshold){
         devia = lambda;
     }
-    Eigen::Matrix<float, 6, 6> S =
-            Eigen::Matrix<float, 6, 6>::Identity();
-    for(int i = 0; i < 6; i++) {
+
+    Eigen::MatrixXf S = Eigen::MatrixXf::Zero(mindim, mindim);
+    for(int i = 0; i < mindim; i++) {
         S(i, i) = 1.0f / (singular_values[i] + devia);
     }
 
-    Eigen::Matrix<float, 6, 6> U = svd.matrixU();
-    Eigen::Matrix<float, 6, 6> V = svd.matrixV();
+    Eigen::MatrixXf U = svd.matrixU();
+    Eigen::MatrixXf V = svd.matrixV();
     inv_jacobian = V * S * U.transpose();
 }
 
 
 Jacobian inverseJacobian(const Jacobian& jacobian)
 {
-    Jacobian inv_jacobian;
+    Jacobian inv_jacobian(jacobian.cols(), jacobian.rows());
     inverseJacobian(jacobian, inv_jacobian);
     return inv_jacobian;
 }
