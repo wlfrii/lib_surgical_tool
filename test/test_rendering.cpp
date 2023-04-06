@@ -30,7 +30,7 @@ std::vector<LayerModel*>& addLayer(std::vector<LayerModel*>& layers, const Confi
 
 int main()
 {
-    gl_util::Window window(width, height);
+    gl_util::Window window(width, height, "RendererWindow");
     window.enableDepthTest();
     window.setKeyboardEventCallBack(keyboardControlModel);
 //    window.setBackgroundColor(255, 255, 255);
