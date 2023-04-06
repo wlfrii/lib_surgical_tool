@@ -22,9 +22,9 @@
  */
 #ifndef LIB_SURGICAL_TOOL_CONFIGSPCS_BUILDER_H_LF
 #define LIB_SURGICAL_TOOL_CONFIGSPCS_BUILDER_H_LF
-#include "../../include/define/configspcs.h"
-#include "../../include/define/surgical_tool_config.h"
-#include "../../include/define/surgical_tool_param.h"
+#include "../../include/lib_surgical_tool/configspcs.h"
+#include "../../include/lib_surgical_tool/surgical_tool_config.h"
+#include "../../include/lib_surgical_tool/surgical_tool_param.h"
 
 extern const float MIN_LENGTH;
 

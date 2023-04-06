@@ -1,6 +1,4 @@
 #include "configspcs_builder.h"
-#include "../include/define/surgical_tool_config.h"
-#include "../include/define/surgical_tool_param.h"
 
 
 using mmath::continuum::ConfigSpc;

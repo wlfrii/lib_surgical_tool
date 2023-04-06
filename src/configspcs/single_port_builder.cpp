@@ -1,6 +1,6 @@
 #include "single_port_builder.h"
-#include "../include/define/surgical_tool_config.h"
-#include "../include/define/surgical_tool_param.h"
+#include "../include/lib_surgical_tool/surgical_tool_config.h"
+#include "../include/lib_surgical_tool/surgical_tool_param.h"
 
 
 extern const float MIN_LENGTH;
